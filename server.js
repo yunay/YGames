@@ -5,20 +5,18 @@ const compiler = webpack(config)
 const express = require('express');
 const path = require('path');
 const server = express();
-const expressOptions = {
-  dotfiles: 'ignore',
-  etag: false,
-  extensions: ['htm', 'html'],
-  index: false,
-  maxAge: '1d',
-  redirect: false,
-  setHeaders: function (res, path, stat) {
-    res.set('x-timestamp', Date.now())
-  }
-}
+const cors = require('cors');
+const mongoose = require('mongoose');
+const mainConfig = require('./main.config'); 
 
 server.use(middleware(compiler));
-server.use(express.static('.',expressOptions));
+server.use(cors());
+server.use(express.static('.'));
+
+mongoose.connect(mainConfig.connectionString)
+mongoose.connection.once('open', () => {
+    console.log('conneted to database');
+});
 
 server.get('/', function response(req, res) {
     res.sendFile(path.join(__dirname,'Index.html'));
