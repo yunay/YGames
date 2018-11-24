@@ -1,16 +1,11 @@
 import * as React from 'react';
-import { BrowserRouter, Link, Redirect } from 'react-router-dom'
+import { BrowserRouter, Link } from 'react-router-dom'
 import { Switch, Route } from 'react-router'
-import Home from './Home'
-import NotFound from './NotFound'
-import { observer } from 'mobx-react'
+import Home from '../pages/Home'
+import Games from '../pages/Games'
+import NotFound from '../pages/NotFound'
 
-
-export interface NavigationProps{
-
-}
-
-@observer export class Navigation extends React.Component<NavigationProps, {}> {
+export default class Navigation extends React.Component<{}, {}> {
 
     public render() {
         return <BrowserRouter basename="/"><>
@@ -28,7 +23,7 @@ export interface NavigationProps{
                                 </Link>
                             </li>
                             <li className="nav-item">
-                                <Link className="nav-link" to="/play">ИГРАЙ</Link>
+                                <Link className="nav-link" to="/games">ИГРАЙ</Link>
                             </li>
                         </ul>
                         {this.renderAuthMenu()}
@@ -38,6 +33,7 @@ export interface NavigationProps{
             <div className="container">
                 <Switch>
                     <Route exact path="/" component={Home} />
+                    <Route exact path="/games" component={Games} />
                     {/* <Route path="/Register" component={() => this.props.user ? <Redirect to='/' /> : <Register authenticatedUser={this.props.authenticatedUser} />} />
                     <Route path="/Login" component={() => this.props.user ? <Redirect to='/' /> : <Login authenticatedUser={this.props.authenticatedUser} />} />} />
                     <Route path="/Play" component={() => !this.props.user ? <Login authenticatedUser={this.props.authenticatedUser} /> : <Play />} /> */}
