@@ -3,6 +3,7 @@ import { BrowserRouter, Link } from 'react-router-dom'
 import { Switch, Route } from 'react-router'
 import Home from '../pages/Home'
 import Games from '../pages/Games'
+import Books from '../pages/Books'
 import NotFound from '../pages/NotFound'
 
 export default class Navigation extends React.Component<{}, {}> {
@@ -25,6 +26,9 @@ export default class Navigation extends React.Component<{}, {}> {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/games">ИГРАЙ</Link>
                             </li>
+                            <li className="nav-item">
+                                <Link className="nav-link" to="/books">Книги</Link>
+                            </li>
                         </ul>
                         {this.renderAuthMenu()}
                     </div>
@@ -34,6 +38,7 @@ export default class Navigation extends React.Component<{}, {}> {
                 <Switch>
                     <Route exact path="/" component={Home} />
                     <Route exact path="/games" component={Games} />
+                    <Route exact path="/books" component={Books} />
                     {/* <Route path="/Register" component={() => this.props.user ? <Redirect to='/' /> : <Register authenticatedUser={this.props.authenticatedUser} />} />
                     <Route path="/Login" component={() => this.props.user ? <Redirect to='/' /> : <Login authenticatedUser={this.props.authenticatedUser} />} />} />
                     <Route path="/Play" component={() => !this.props.user ? <Login authenticatedUser={this.props.authenticatedUser} /> : <Play />} /> */}
