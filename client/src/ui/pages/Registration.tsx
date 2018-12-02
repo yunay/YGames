@@ -1,11 +1,17 @@
 import * as React from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
+import { graphql, compose } from 'react-apollo';
+import { registerQuery, loginQuery } from '../../queries'
 
-@observer export default class Registration extends React.Component<any, any>{
+interface RegistrationProps {
+    handleRegister?: () => void;
+}
 
-    @observable private name: string;
-    @observable private password: string;
+@observer class Registration extends React.Component<any, any>{
+
+    @observable private name: string = "";
+    @observable private password: string = "";
     @observable private repassword: string = "";
 
     constructor(props: any) {
@@ -52,7 +58,24 @@ import { observable } from 'mobx';
         this.repassword = e.target.value;
     }
 
-    handleRegister() {
-       
+    private async handleRegister() {
+
+        await (this.props as any).register({
+            variables: { name: this.name, password: this.password },
+        });
+
+        const loginResponse = await (this.props as any).login({
+            variables: { name: this.name, password: this.password },
+        })
+        
+        const { token, refreshToken } = loginResponse.data.login;
+        localStorage.setItem('token', token);
+        localStorage.setItem('refreshToken', refreshToken);
+        this.props.handleRegister();
     }
 }
+
+export default compose(
+    graphql<RegistrationProps>(registerQuery,{name:"register"}),
+    graphql(loginQuery,{name:"login"})
+) (Registration);

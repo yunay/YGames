@@ -1,22 +1,21 @@
 import { gql } from 'apollo-boost';
 
-const getBooksQuery = gql`
-    {
-        books {
-            name
-            genre
+const loginQuery = gql`
+    mutation($name: String!, $password:String!){
+        login(name:$name, password: $password){
+            token
+            refreshToken
         }
     }
 `;
 
-const addBookMutation = gql`
-    mutation AddBook($name: String!, $genre: String!){
-        addBook(name: $name, genre: $genre){
+const registerQuery = gql`
+    mutation($name: String!, $password:String!){
+        register(name:$name, password: $password){
             name
-            genre
+            password
         }
     }
 `;
 
-
-export { getBooksQuery, addBookMutation };
+export { loginQuery, registerQuery };

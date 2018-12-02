@@ -7,8 +7,8 @@ type Book{
 }
 
 type User{
-    password:String!
     name:String!
+    password:String!
 }
 
 type AuthPayload {
@@ -23,7 +23,7 @@ type Query{
 
 type Mutation{
     addBook(name:String, genre:String):Book!
-    register(name: String!,  password: String!): User!
+    register(name: String!, password: String!): User!
     login(name:String!, password:String!):AuthPayload!
     refreshTokens(token: String!, refreshToken: String!): AuthPayload!
 }

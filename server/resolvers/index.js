@@ -9,12 +9,17 @@ module.exports = {
         user: () => User.find({})
     },
     Mutation: {
-        register: async (parent, args) => {
-            var user = new User();
-            user.name = args.name;
-            user.password = await bcrypt.hash(args.password, 12);
+        register: async (parent, { name, password }) => {
+            var user = await User.findOne({ name });
 
-            return user.save();
+            if (user)
+                throw new Error("Username is already used!");
+           
+            var currentUser = new User();
+            currentUser.name = name;
+            currentUser.password = await bcrypt.hash(password, 12);
+
+            return currentUser.save();
         },
         login: async (parent, { name, password }, context) => tryLogin(name, password, context),
         refreshTokens: (parent, { token, refreshToken }, context) => refreshTokens(token, refreshToken, context),

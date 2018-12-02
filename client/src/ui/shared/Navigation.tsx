@@ -4,8 +4,7 @@ import { Switch, Route } from 'react-router'
 import * as jwtDocde from 'jwt-decode';
 import Home from '../pages/Home'
 import Games from '../pages/Games'
-import Books from '../pages/Books'
-import { Login } from '../pages/Login'
+import Login from '../pages/Login'
 import Registration from '../pages/Registration'
 import NotFound from '../pages/NotFound'
 import { observable } from 'mobx';
@@ -39,6 +38,7 @@ export const checkAuth = () => {
 
         this.isUserAuthenticated = checkAuth();
         this.handleLoginCallback = this.handleLoginCallback.bind(this);
+        this.handleRegisterCallback = this.handleRegisterCallback.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
     }
     public render() {
@@ -59,9 +59,6 @@ export const checkAuth = () => {
                             <li className="nav-item">
                                 <Link className="nav-link" to="/games">ИГРАЙ</Link>
                             </li>
-                            <li className="nav-item">
-                                <Link className="nav-link" to="/books">Книги</Link>
-                            </li>
                         </ul>
                         {this.renderAuthMenu()}
                     </div>
@@ -70,8 +67,7 @@ export const checkAuth = () => {
             <div className="container">
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    <Route exact path="/books" component={Books} />
-                    <Route path="/register" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Registration />} />
+                    <Route path="/register" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Registration handleRegister={this.handleRegisterCallback}/>} />
                     <Route path="/login" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Login handleLogin={this.handleLoginCallback} />} />} />
                     <Route path="/games" component={() => !checkAuth() ? <Login handleLogin={this.handleLoginCallback} /> : <Games />} />
                     <Route path="*" component={NotFound} />
@@ -98,6 +94,10 @@ export const checkAuth = () => {
     }
 
     private handleLoginCallback() {
+        this.isUserAuthenticated = checkAuth();
+    }
+
+    private handleRegisterCallback(){
         this.isUserAuthenticated = checkAuth();
     }
 
