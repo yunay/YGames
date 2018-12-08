@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { graphql } from 'react-apollo';
-import { loginQuery } from '../../queries';
+import { MUTATIONS } from '../../queries';
 
 interface LoginProps {
     handleLogin: () => void;
@@ -61,4 +61,4 @@ interface LoginProps {
     }
 }
 
-export default graphql<LoginProps>(loginQuery,{name:"login"})(Login);
+export default graphql<LoginProps>(MUTATIONS.LOGIN_QUERY,{name:"login"})(Login);

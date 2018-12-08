@@ -15,7 +15,6 @@ export default class Games extends React.Component<{},{}>{
             </ul>
 
              <Route path="/games/saboteur" component={Saboteur} />
-
         </div>
     }
 }

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { graphql, compose } from 'react-apollo';
-import { registerQuery, loginQuery } from '../../queries'
+import { MUTATIONS } from '../../queries'
 
 interface RegistrationProps {
     handleRegister?: () => void;
@@ -76,6 +76,6 @@ interface RegistrationProps {
 }
 
 export default compose(
-    graphql<RegistrationProps>(registerQuery,{name:"register"}),
-    graphql(loginQuery,{name:"login"})
+    graphql<RegistrationProps>(MUTATIONS.REGISTER_QUERY,{name:"register"}),
+    graphql(MUTATIONS.LOGIN_QUERY,{name:"login"})
 ) (Registration);

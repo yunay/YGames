@@ -13,6 +13,9 @@ mongoose.connection.once('open', () => {
 const server = new ApolloServer({
   typeDefs,
   resolvers,
+  subscriptions: {
+  
+  },
   context: {
     SECRET: serverConfig.secret,
     addUser: async (req, res, next) => {
@@ -42,6 +45,7 @@ const server = new ApolloServer({
   }
 });
 
-server.listen().then(({ url }) => {
+server.listen().then(({ url, subscriptionsUrl  }) => {
   console.log(`🚀  Server ready at ${url}`);
+  console.log(`🚀 Subscriptions ready at ${subscriptionsUrl}`);
 });

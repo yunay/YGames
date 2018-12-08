@@ -1,14 +1,15 @@
 const { gql } = require('apollo-server');
 
 const typeDefs = gql`
-type Book{
-    name:String
-    genre: String
-}
 
 type User{
     name:String!
     password:String!
+}
+
+type Message{
+    text:String!
+    owner:String!
 }
 
 type AuthPayload {
@@ -17,15 +18,19 @@ type AuthPayload {
 }
 
 type Query{
-    books:[Book]!
     user (id: ID!): User
+    getMessages: [Message!]!
 }
 
 type Mutation{
-    addBook(name:String, genre:String):Book!
     register(name: String!, password: String!): User!
     login(name:String!, password:String!):AuthPayload!
     refreshTokens(token: String!, refreshToken: String!): AuthPayload!
+    addMessage(text: String, owner: String): Message!
+}
+
+type Subscription {
+    messageAdded: Message!
 }
 `
 
