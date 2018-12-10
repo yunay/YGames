@@ -64,7 +64,7 @@ export class Chat extends React.Component<any, any>{
     public render() {
 
         return <div className="chat box">
-            <div className="chat-head head-text">ЧАТ</div>
+            <div className="chat-head head-text">💬</div>
             <div className="chat-body">
                 <ChatBody />
             </div>
