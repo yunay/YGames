@@ -9,7 +9,8 @@ type User{
 
 type Message{
     text:String!
-    owner:String!
+    ownerName:String!
+    ownerId:String!
 }
 
 type AuthPayload {
@@ -26,7 +27,7 @@ type Mutation{
     register(name: String!, password: String!): User!
     login(name:String!, password:String!):AuthPayload!
     refreshTokens(token: String!, refreshToken: String!): AuthPayload!
-    addMessage(text: String, owner: String): Message!
+    addMessage(text: String, ownerName: String, ownerId: String): Message!
 }
 
 type Subscription {

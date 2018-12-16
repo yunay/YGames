@@ -4,22 +4,20 @@ export class ActiveUsers extends React.Component<{}, {}>{
 
     public render() {
 
-        return <table className="table">
-            <thead className="thead-dark">
+        return <table className="table main-table">
+            <thead>
                 <tr>
-                    <th colSpan={3}>Играчи</th>
+                    <th colSpan={2}>Играчи</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
                     <td>Юнай</td>
-                    <td><a href="javascript:;" className="badge badge-danger">Зает</a></td>
-                    <td><button type="button" className="btn btn-danger btn-sm">Откажи</button></td>
+                    <td><button type="button" className="btn btn-danger btn-sm">Откажи <i className="fa fa-user-times"></i></button></td>
                 </tr>
                 <tr>
                     <td>Джей</td>
-                    <td><a href="javascript:;" className="badge badge-success">Свободен</a></td>
-                    <td><button type="button" className="btn btn-success btn-sm">Покани</button></td>
+                    <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
                 </tr>
             </tbody>
         </table>

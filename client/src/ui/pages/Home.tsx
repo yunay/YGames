@@ -4,6 +4,6 @@ export default class Home extends React.Component<{},{}>{
     
     public render(){
 
-        return <div>Начало</div>
+        return <div>Начало </div>
     }
 }

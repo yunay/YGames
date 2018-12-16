@@ -34,7 +34,8 @@ module.exports = {
 
             var msg = new Message();
             msg.text = args.text
-            msg.owner = args.owner
+            msg.ownerName = args.ownerName
+            msg.ownerId = args.ownerId
 
             return msg.save();
         }

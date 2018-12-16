@@ -9,12 +9,12 @@ import { ApolloClient, InMemoryCache } from 'apollo-boost';
 
 // Create an http link:
 const httpLink = new HttpLink({
-  uri: 'http://localhost:4000'
+  uri: 'http://192.168.0.103:4000'
 });
 
 // Create a WebSocket link:
 const wsLink = new WebSocketLink({
-  uri: `ws://localhost:4000/graphql`,
+  uri: `ws://192.168.0.103:4000/graphql`,
   options: {
     reconnect: true
   }

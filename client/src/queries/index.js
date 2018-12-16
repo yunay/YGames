@@ -5,7 +5,8 @@ const QUERIES = {
     query{
         getMessages{
           text,
-          owner
+          ownerId,
+          ownerName
         }
       }`
 }
@@ -26,10 +27,11 @@ const MUTATIONS = {
         }
     }`,
     ADD_MESSAGE_QUERY:gql`
-    mutation($text: String, $owner:String){
-        addMessage(text:$text, owner: $owner){
+    mutation($text: String, $ownerId:String, $ownerName:String){
+        addMessage(text:$text, ownerId: $ownerId, ownerName: $ownerName){
             text
-            owner
+            ownerId
+            ownerName
         }
     }`
 }
@@ -38,8 +40,9 @@ const SUBSCRIPTIONS = {
     ON_ADDED_MSG:  gql`
     subscription{
         messageAdded{
-          text,
-          owner
+          text
+          ownerName
+          ownerId
         }
       }`
 }

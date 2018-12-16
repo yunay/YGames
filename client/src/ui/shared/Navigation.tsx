@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { BrowserRouter, Link, Redirect } from 'react-router-dom'
 import { Switch, Route } from 'react-router'
-import * as jwtDocde from 'jwt-decode';
 import Home from '../pages/Home'
 import Games from '../pages/Games'
 import Login from '../pages/Login'
@@ -9,26 +8,7 @@ import Registration from '../pages/Registration'
 import NotFound from '../pages/NotFound'
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
-
-export const checkAuth = () => {
-    var token = localStorage.getItem('token');
-    var refreshToken = localStorage.getItem('refreshToken');
-
-    if (!token || !refreshToken)
-        return false;
-
-    try {
-        var { exp } = jwtDocde(refreshToken);
-
-        if (exp < new Date().getTime() / 1000) {
-            return false;
-        }
-    } catch (e) {
-        return false;
-    }
-
-    return true;
-}
+import { identity } from 'common'
 
 @observer export default class Navigation extends React.Component<{}, {}> {
     @observable isUserAuthenticated: boolean = false;
@@ -36,11 +16,12 @@ export const checkAuth = () => {
     constructor(props: any) {
         super(props);
 
-        this.isUserAuthenticated = checkAuth();
+        this.isUserAuthenticated = identity.isAuthenticated();
         this.handleLoginCallback = this.handleLoginCallback.bind(this);
         this.handleRegisterCallback = this.handleRegisterCallback.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
     }
+
     public render() {
         return <BrowserRouter basename="/"><>
             <nav className="navbar navbar-expand-lg main-navbar main-text fixed-top">
@@ -67,9 +48,9 @@ export const checkAuth = () => {
             <div className="container">
                 <Switch>
                     <Route exact path="/" component={Home} />
-                    <Route path="/register" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Registration handleRegister={this.handleRegisterCallback}/>} />
+                    <Route path="/register" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Registration handleRegister={this.handleRegisterCallback} />} />
                     <Route path="/login" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Login handleLogin={this.handleLoginCallback} />} />} />
-                    <Route path="/games" component={() => !checkAuth() ? <Login handleLogin={this.handleLoginCallback} /> : <Games />} />
+                    <Route path="/games" component={() => !this.isUserAuthenticated  ? <Login handleLogin={this.handleLoginCallback} /> : <Games />} />
                     <Route path="*" component={NotFound} />
                 </Switch>
             </div></>
@@ -80,7 +61,9 @@ export const checkAuth = () => {
         return <ul className="navbar-nav ml-auto">
             {
                 this.isUserAuthenticated
-                    ? <li className="nav-item"><a className="nav-link" onClick={this.handleLogout}>ИЗХОД</a></li>
+                    ? <><li className="nav-item"><a className="nav-link">ЗДРАВЕЙ, {identity.userInfo().name}</a></li>
+                        <li className="nav-item"><a className="nav-link" onClick={this.handleLogout}>ИЗХОД</a></li>
+                    </>
                     : <>
                         <li className="nav-item">
                             <Link className="nav-link" to="/register">РЕГИСТРАЦИЯ</Link>
@@ -94,16 +77,16 @@ export const checkAuth = () => {
     }
 
     private handleLoginCallback() {
-        this.isUserAuthenticated = checkAuth();
+        this.isUserAuthenticated = identity.isAuthenticated();
     }
 
-    private handleRegisterCallback(){
-        this.isUserAuthenticated = checkAuth();
+    private handleRegisterCallback() {
+        this.isUserAuthenticated = identity.isAuthenticated();
     }
 
     private handleLogout() {
         localStorage.removeItem('token');
         localStorage.removeItem('refreshToken');
-        this.isUserAuthenticated = checkAuth();
+        this.isUserAuthenticated = identity.isAuthenticated();
     }
 }

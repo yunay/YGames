@@ -2,11 +2,22 @@ import * as React from 'react'
 import { Query, Mutation } from 'react-apollo';
 import { MUTATIONS, QUERIES, SUBSCRIPTIONS } from '../../queries';
 import './common.css';
+import { User } from '../../models/User';
+import { identity } from 'common'
 
-const ChatBody = () => {
-    var unsubscribe: any = null;
+class ChatBody extends React.Component<any, any>{
+    private user: User;
 
-    return <Query query={QUERIES.GET_MESSAGES}>
+    constructor(props:any){
+        super(props);
+
+        this.user = identity.userInfo();
+    }
+
+    render(){
+        var unsubscribe: any = null;
+
+        return  <Query query={QUERIES.GET_MESSAGES}>
 
         {({ loading, error, data, subscribeToMore }) => {
 
@@ -30,14 +41,25 @@ const ChatBody = () => {
             }
 
             return data && data.getMessages.map((message: any, id: number) => {
+                if(message.ownerId === this.user._id)
+                    return <div key={id} className="chat-message chat-msg-sent"><span>{message.text}</span></div>
+
                 return <div key={id} className="chat-message chat-msg-received"><span>{message.text}</span></div>
             })
         }}
     </Query>
+    }
 }
 
 class ChatInput extends React.Component<any, any>{
     private message:any = null;
+    private user: User;
+
+    constructor(props:any){
+        super(props);
+
+        this.user = identity.userInfo();
+    }
 
     render() {
         return <Mutation mutation={MUTATIONS.ADD_MESSAGE_QUERY}>
@@ -47,7 +69,7 @@ class ChatInput extends React.Component<any, any>{
                             <input type="text" className="form-control chat-input" ref={(e) => this.message = e} placeholder="..." />
                             <div className="input-group-append">
                                 <button onClick={(e:any) => {
-                                    addMessage({ variables: { text: this.message.value, owner: "Yunay" } });
+                                    addMessage({ variables: { text: this.message.value, ownerName: this.user.name, ownerId: this.user._id } });
                                     this.message.value = "";
                                 }} className="btn main-color main-text" type="button">Изпрати</button>
                             </div>

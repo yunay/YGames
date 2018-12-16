@@ -56,9 +56,7 @@ const tryLogin = async (name, password, context) => {
     throw new Error('Invalid login');
   }
 
-  const user = await User.findOne({ where: { id: localUser.user_id }, raw: true });
-
-  const [token, refreshToken] = await createTokens(user, context.SECRET);
+  const [token, refreshToken] = await createTokens(localUser, context.SECRET);
 
   return {
     token,
