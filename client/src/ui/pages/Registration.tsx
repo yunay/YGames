@@ -14,6 +14,7 @@ interface RegistrationProps {
     @observable private password: string = "";
     @observable private repassword: string = "";
 
+
     constructor(props: any) {
         super(props)
 
@@ -24,24 +25,61 @@ interface RegistrationProps {
     }
 
     public render() {
-        return <div>
-            <div>
-                <label>Име
-                    <input type="text" className="form-control" value={this.name} onChange={this.handleNameChange} />
-                </label>
+        return <div className="row">
+
+            <div className="col-sm-12 col-md-4">
+                <div>
+                    <label>Име
+            <input type="text" className="form-control" value={this.name} onChange={this.handleNameChange} />
+                    </label>
+                </div>
+                <div>
+                    <label>Парола
+            <input type="password" className="form-control" value={this.password} onChange={this.handlePasswordChange} />
+                    </label>
+                </div>
+                <div>
+                    <label>Повтори парола
+            <input type="password" className="form-control" value={this.repassword} onChange={this.handleRePasswordChange} />
+                    </label>
+                </div>
+                <div>
+                    <button type="button" className="btn btn-primary" onClick={this.handleRegister}>РЕГИСТРАЦИЯ</button>
+                </div>
             </div>
-            <div>
-                <label>Парола
-                    <input type="password" className="form-control" value={this.password} onChange={this.handlePasswordChange} />
-                </label>
-            </div>
-            <div>
-                <label>Повтори парола
-                    <input type="password" className="form-control" value={this.repassword} onChange={this.handleRePasswordChange} />
-                </label>
-            </div>
-            <div>
-                <button type="button" className="btn btn-primary" onClick={this.handleRegister}>РЕГИСТРАЦИЯ</button>
+            <div className="col-sm-12 col-md-8 avatars-panel">
+                <div className="row">
+                    <div className="col-2"><span className="avatar-panel">😎</span><span className="fa fa-check selected-avatar"></span></div>
+                    <div className="col-2"><span className="avatar-panel">🤩</span></div>
+                    <div className="col-2"><span className="avatar-panel">😜</span></div>
+                    <div className="col-2"><span className="avatar-panel">🤠</span></div>
+                    <div className="col-2"><span className="avatar-panel">👻</span></div>
+                    <div className="col-2"><span className="avatar-panel">👧</span><span className="fa fa-check selected-avatar"></span></div>
+                </div>
+                <div className="row">
+                    <div className="col-2"><span className="avatar-panel">🧒</span></div>
+                    <div className="col-2"><span className="avatar-panel">👸</span></div>
+                    <div className="col-2"><span className="avatar-panel">👩</span></div>
+                    <div className="col-2"><span className="avatar-panel">🤴</span></div>
+                    <div className="col-2"><span className="avatar-panel">👱‍</span></div>
+                    <div className="col-2"><span className="avatar-panel">👦</span></div>
+                </div>
+                <div className="row">
+                    <div className="col-2"><span className="avatar-panel">🐹</span></div>
+                    <div className="col-2"><span className="avatar-panel">🐺</span></div>
+                    <div className="col-2"><span className="avatar-panel">🦉</span></div>
+                    <div className="col-2"><span className="avatar-panel">🐵</span></div>
+                    <div className="col-2"><span className="avatar-panel">🐸</span></div>
+                    <div className="col-2"><span className="avatar-panel">🦁</span></div>
+                </div>
+                <div className="row">
+                    <div className="col-2"><span className="avatar-panel">🐯</span></div>
+                    <div className="col-2"><span className="avatar-panel">🦊</span></div>
+                    <div className="col-2"><span className="avatar-panel">🐰</span></div>
+                    <div className="col-2"><span className="avatar-panel">🐭</span></div>
+                    <div className="col-2"><span className="avatar-panel">🐱</span></div>
+                    <div className="col-2"><span className="avatar-panel">🐶</span></div>
+                </div>
             </div>
         </div>
     }
@@ -67,7 +105,7 @@ interface RegistrationProps {
         const loginResponse = await (this.props as any).login({
             variables: { name: this.name, password: this.password },
         })
-        
+
         const { token, refreshToken } = loginResponse.data.login;
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
@@ -76,6 +114,6 @@ interface RegistrationProps {
 }
 
 export default compose(
-    graphql<RegistrationProps>(MUTATIONS.REGISTER_QUERY,{name:"register"}),
-    graphql(MUTATIONS.LOGIN_QUERY,{name:"login"})
-) (Registration);
+    graphql<RegistrationProps>(MUTATIONS.REGISTER_QUERY, { name: "register" }),
+    graphql(MUTATIONS.LOGIN_QUERY, { name: "login" })
+)(Registration);
