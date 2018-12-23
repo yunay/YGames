@@ -129,3 +129,17 @@ table.main-table > tbody {
 table.main-table td{
     width: 100%;
 }
+
+.lobby-main-btn{
+    font-size: 18px !important;
+}
+
+.lobby-main-btn>i{
+    padding: 0 8px 0 0;
+}
+
+.lobby-main-header{
+    color: #ff6a00;
+    text-shadow: 3px 3px #e2e2e2;
+    font-weight: bold;
+}
