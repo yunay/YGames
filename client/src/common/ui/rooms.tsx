@@ -21,6 +21,41 @@ export class Rooms extends React.Component<{}, {}>{
                 <td>5/5</td>
                 <td><button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button></td>
             </tr>
+            <tr>
+                <td>Джей</td>
+                <td>5/5</td>
+                <td><button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button></td>
+            </tr>
+            <tr>
+                <td>Джей</td>
+                <td>5/5</td>
+                <td><button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button></td>
+            </tr>
+            <tr>
+                <td>Джей</td>
+                <td>5/5</td>
+                <td><button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button></td>
+            </tr>
+            <tr>
+                <td>Джей</td>
+                <td>5/5</td>
+                <td><button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button></td>
+            </tr>
+            <tr>
+                <td>Джей</td>
+                <td>5/5</td>
+                <td><button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button></td>
+            </tr>
+            <tr>
+                <td>Джей</td>
+                <td>5/5</td>
+                <td><button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button></td>
+            </tr>
+            <tr>
+                <td>Джей</td>
+                <td>5/5</td>
+                <td><button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button></td>
+            </tr>
         </tbody>
     </table>
     }

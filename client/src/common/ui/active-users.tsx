@@ -19,6 +19,34 @@ export class ActiveUsers extends React.Component<{}, {}>{
                     <td>Джей</td>
                     <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
                 </tr>
+                <tr>
+                    <td>Джей</td>
+                    <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
+                </tr>
+                <tr>
+                    <td>Джей</td>
+                    <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
+                </tr>
+                <tr>
+                    <td>Джей</td>
+                    <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
+                </tr>
+                <tr>
+                    <td>Джей</td>
+                    <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
+                </tr>
+                <tr>
+                    <td>Джей</td>
+                    <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
+                </tr>
+                <tr>
+                    <td>Джей</td>
+                    <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
+                </tr>
+                <tr>
+                    <td>Джей</td>
+                    <td><button type="button" className="btn btn-success btn-sm">Покани <i className="fa fa-user-plus"></i></button></td>
+                </tr>
             </tbody>
         </table>
     }

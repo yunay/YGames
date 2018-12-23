@@ -86,6 +86,10 @@ textarea {
     color: green;
 }
 
+.card-header{
+  background: #ff6a00;
+  padding: 0;
+}
 
 /* .saboteur-dwarf {
   background: url(../Images/dwarfs.jpg) 0 -151px;

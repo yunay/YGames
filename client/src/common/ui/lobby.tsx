@@ -7,7 +7,7 @@ export class Lobby extends React.Component<{}, {}>{
 
     public render() {
 
-        return <div className="row">
+        return <div><div className="row">
             <div className="col-4">
                 <Chat />
             </div>
@@ -17,6 +17,7 @@ export class Lobby extends React.Component<{}, {}>{
             <div className="col-4">
                 <Rooms />
             </div>
+        </div>
         </div>
     }
 }

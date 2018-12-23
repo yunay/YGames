@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@types/query-string": "^6.1.1",
     "@types/ws": "^6.0.1",
     "apollo-boost": "0.1.22",
     "apollo-link-ws": "^1.0.10",
@@ -12,6 +13,7 @@
     "jwt-decode": "2.2.0",
     "mobx": "5.6.0",
     "mobx-react": "5.4.2",
+    "query-string": "^6.2.0",
     "react": "16.6.3",
     "react-apollo": "2.3.1",
     "react-bootstrap": "0.32.4",

@@ -91,10 +91,41 @@
 /*Chat end*/
 
 .main-table{
-    box-shadow: 0px 0px 5px 1px gainsboro;
+    border: 1px solid #eaeaea;
+    border-radius: 5px 5px 0 0;
+    border-top: none;
 }
 
 .main-table td{
-    padding: 3px 5px 3px 5px !Important;
+    padding: 2px 5px 2px 5px !Important;
     vertical-align: middle !Important;
+}
+
+table.main-table thead th {
+    vertical-align: bottom !Important;
+    border-bottom: none;
+    background: #ff6a00 !Important;
+    color: white !Important;
+    padding: 3px 5px!Important;
+    border-radius: 5px 5px 0 0 !Important;
+}
+
+table.main-table {
+    width: 100%;
+    display:block;
+}
+table.main-table > thead {
+    display: inline-table;
+    width: 100%;
+    height: 20px;
+}
+table.main-table > tbody {
+    height: 330px;
+    display: inline-block;
+    width: 100%;
+    overflow: auto;
+}
+
+table.main-table td{
+    width: 100%;
 }
