@@ -5,6 +5,8 @@ const typeDefs = gql`
 type User{
     name:String!
     password:String!
+    gameLobby: String!
+    isPlaying: Boolean!
 }
 
 type Message{

@@ -1,6 +1,5 @@
 const { ApolloServer } = require('apollo-server');
 const mongoose = require('mongoose');
-const { createHttpLink } = require('apollo-link-http');
 const typeDefs = require('./schema/schema');
 const resolvers = require('./resolvers');
 const serverConfig = require('./server.config');

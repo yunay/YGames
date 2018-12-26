@@ -23,6 +23,8 @@ module.exports = {
            
             var currentUser = new User();
             currentUser.name = name;
+            currentUser.gameLobby = "";
+            currentUser.isPlaying = false;
             currentUser.password = await bcrypt.hash(password, 12);
 
             return currentUser.save();
