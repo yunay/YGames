@@ -17,8 +17,9 @@ module.exports = {
     Query: {
         user: () => User.find({}),
         getMessages: async () => await Message.find({}),
-        getRoomById: async (id) => await Room.find({id}),
-        getRooms: async () => await Room.find({}),
+        getGames: async () => await Game.find({}),
+        getGameByName: async (parent, { originalName }) => await Game.findOne({originalName:originalName}),
+        getRoomsByGameId: async (parent, { gameId }) => await Room.find({ gameId }),
     },
     Mutation: {
         register: async (parent, { name, password }) => {
@@ -26,8 +27,9 @@ module.exports = {
 
             if (user)
                 throw new Error("Username is already used!");
-           
+
             var currentUser = new User();
+            currentUser.id = +new Date + "_" + "user"
             currentUser.name = name;
             currentUser.gameLobby = "";
             currentUser.isPlaying = false;
@@ -37,8 +39,8 @@ module.exports = {
         },
         login: async (parent, { name, password }, context) => tryLogin(name, password, context),
         refreshTokens: (parent, { token, refreshToken }, context) => refreshTokens(token, refreshToken, context),
-        addMessage:(root,args,context)=>{
-            pubsub.publish(MESSAGE_ADDED, {messageAdded:args});
+        addMessage: (root, args, context) => {
+            pubsub.publish(MESSAGE_ADDED, { messageAdded: args });
 
             var msg = new Message();
             msg.text = args.text
@@ -47,26 +49,27 @@ module.exports = {
 
             return msg.save();
         },
-        addRoom: (parent, {gameId, name, ownerId}) =>{
-            var room = new Room();
+        addRoom: (parent, {gameId, name, ownerId}) => {
 
+            var room = new Room();
+            room.id = +new Date() + "_" + "room";
             room.gameId = gameId;
             room.name = name;
             room.ownerId = ownerId;
             room.isOpen = true;
             room.playersIds = [ownerId];
+            
+            pubsub.publish(ROOM_ADDED, { roomAdded: { id:room.id, gameId:room.gameId, name:room.name, ownerId:room.ownerId, isOpen:room.isOpen, playersIds:room.playersIds } });
 
-            return room.save().then(()=>{
-                pubsub.publish(ROOM_ADDED, {roomAdded:args});
-            });
+            return room.save();
         }
     },
-    Subscription:{
-        messageAdded:{
-            subscribe: async ()=> await pubsub.asyncIterator([MESSAGE_ADDED])
+    Subscription: {
+        messageAdded: {
+            subscribe: async () => await pubsub.asyncIterator([MESSAGE_ADDED])
         },
-        roomAdded:{
-            subscribe: async ()=> await pubsub.asyncIterator([ROOM_ADDED])
+        roomAdded: {
+            subscribe: async () => await pubsub.asyncIterator([ROOM_ADDED])
         },
     }
 };

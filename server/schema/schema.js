@@ -3,6 +3,7 @@ const { gql } = require('apollo-server');
 const typeDefs = gql`
 
 type User{
+    id:String!
     name:String!
     password:String!
     gameLobby: String!
@@ -10,6 +11,7 @@ type User{
 }
 
 type Room{
+    id:String!
     gameId: String!
     name: String!
     ownerId: String!
@@ -18,6 +20,7 @@ type Room{
 }
 
 type Game{
+    id:String!
     originalName: String!
     translatedName: String!
     shortDescription: String!
@@ -25,6 +28,8 @@ type Game{
     maxPlayers: Int!
     gameRules: String!
     isActive: Boolean!
+    playingTime: String!
+    adultControl: String!
 }
 
 type Message{
@@ -40,9 +45,10 @@ type AuthPayload {
 
 type Query{
     user (id: ID!): User
+    getGames: [Game!]!
+    getGameByName(originalName:String!):Game!
     getMessages: [Message!]!
-    getRoomById:Room!
-    getRooms:[Room!]!
+    getRoomsByGameId(gameId:String!):[Room!]!
 }
 
 type Mutation{

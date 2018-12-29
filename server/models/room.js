@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const roomSchema = new Schema({
+    id:String,
     gameId: String,
     name: String,
     ownerId: String,

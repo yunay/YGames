@@ -9,9 +9,10 @@ const QUERIES = {
           ownerName
         }
       }`,
-    GET_ROOMS: gql`
-    query{
-        getRooms{
+    GET_ROOMS_BY_GAME_ID: gql`
+    query($gameId:String!){
+        getRoomsByGameId(gameId:$gameId){
+            id
             gameId
             name
             ownerId
@@ -19,16 +20,32 @@ const QUERIES = {
             playersIds
         }
       }`,
-    GET_ROOM_BY_ID: gql`
+    GET_GAMES: gql`
     query{
-        getRoomById{
-            gameId
-            name
-            ownerId
-            isOpen
-            playersIds
+        getGames{
+            id
+            originalName
+            translatedName
+            shortDescription
+            minPlayers
+            maxPlayers
+            gameRules
+            isActive
+          }
+      }`,
+    GET_GAME_BY_NAME: gql`
+    query($originalName:String!){
+          getGameByName(originalName:$originalName){
+              id
+              originalName
+              translatedName
+              shortDescription
+              minPlayers
+              maxPlayers
+              gameRules
+              isActive
         }
-      }`
+    }`
 }
 
 const MUTATIONS = {
@@ -68,6 +85,7 @@ const SUBSCRIPTIONS = {
     ON_ROOM_ADDED: gql`
     subscription{
         roomAdded{
+            id
             gameId
             name
             ownerId

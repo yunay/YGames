@@ -6,7 +6,9 @@ import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 
-@observer export class Lobby extends React.Component<{}, {}>{
+export const GameContext = React.createContext({})
+
+@observer export class Lobby extends React.Component<any, any>{
     @observable private shownGameRulesModal: boolean;
     @observable private shownCreateRoomModal: boolean;
     @observable private roomName:string = "";

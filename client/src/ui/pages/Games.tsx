@@ -2,30 +2,57 @@ import * as React from 'react'
 import saboteur from '../../images/saboteur.jpg'
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import Game from './Game'
+import { Query } from 'react-apollo';
+import { QUERIES } from '../../queries';
+import { GameContext } from 'common';
 
 class GamesImpl extends React.Component<RouteComponentProps, any> {
 
     render() {
-        var game = (this.props.match.params as any).game
+        var gameName = (this.props.match.params as any).game;
+        if (gameName != null && gameName != undefined) {
 
-        if(game != "" && game != null && game != undefined){
-            return <Game game={game}/>
+            return <Query query={QUERIES.GET_GAME_BY_NAME} variables={{originalName:gameName}}>
+                {
+                    ({ loading, error, data }) => {
+                        if (loading) return null;
+                        if (error) return `Error!: ${error}`;
+
+                        return data && <GameContext.Provider value={data.getGameByName}>
+                            <Game />
+                    </GameContext.Provider>
+                    }
+                }
+            </Query>
         }
-        
-        return <div>
-            <div className="row">
-                <div className="col-md-3">
-                    <div className="card" style={{ "width": "18rem" }}>
-                        <img className="card-img-top" src={saboteur} />
-                        <div className="card-body">
-                            <h5 className="card-title">Саботьор</h5>
-                            <p className="card-text">Забавна игра с карти. </p>
-                            <Link className="btn btn-primary" to={`/games/saboteur`}>Играй</Link>
-                        </div>
+
+        return <Query query={QUERIES.GET_GAMES}>
+            {
+                ({ loading, error, data }) => {
+
+                    if (loading) return null;
+                    if (error) return `Error!: ${error}`;
+
+                    return <div className="row">
+                        {
+                            data && data.getGames.map((game: any) => {
+                                return <div className="col-md-3" key={game.id}>
+                                    <div className="card" style={{ "width": "18rem" }}>
+                                        <img className="card-img-top" src={saboteur} />
+                                        <div className="card-body">
+                                            <h5 className="card-title">{game.translatedName}</h5>
+                                            <p className="card-text">{game.shortDescription}</p>
+                                            <Link className="btn btn-primary" to={`/games/${game.originalName}`}>Играй</Link>
+                                        </div>
+                                    </div>
+                                </div>
+                            })
+                        }
                     </div>
-                </div>
-            </div>
-        </div>
+                }
+            }
+
+        </Query>
     }
 }
 
