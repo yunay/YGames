@@ -1,13 +1,12 @@
 import * as React from 'react'
 import saboteur from '../../images/saboteur.jpg'
-import { Link, withRouter } from 'react-router-dom';
+import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import Game from './Game'
-import * as qs from 'query-string';
 
-class GamesImpl extends React.Component<any, any> {
+class GamesImpl extends React.Component<RouteComponentProps, any> {
 
     render() {
-        var game:any = qs.parse((this.props as any).history.location.search).game
+        var game = (this.props.match.params as any).game
 
         if(game != "" && game != null && game != undefined){
             return <Game game={game}/>
@@ -21,7 +20,7 @@ class GamesImpl extends React.Component<any, any> {
                         <div className="card-body">
                             <h5 className="card-title">Саботьор</h5>
                             <p className="card-text">Забавна игра с карти. </p>
-                            <Link className="btn btn-primary" to={{ pathname: "/games", search: "?game=saboteur" }}>Играй</Link>
+                            <Link className="btn btn-primary" to={`/games/saboteur`}>Играй</Link>
                         </div>
                     </div>
                 </div>

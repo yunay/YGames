@@ -3,11 +3,14 @@ const mongoose = require('mongoose');
 const typeDefs = require('./schema/schema');
 const resolvers = require('./resolvers');
 const serverConfig = require('./server.config');
+const bootstraper = require('./bootstraper');
 
 mongoose.connect(serverConfig.connectionString, { useNewUrlParser: true })
 mongoose.connection.once('open', () => {
   console.log('conneted to database');
 });
+
+bootstraper.run();
 
 const server = new ApolloServer({
   typeDefs,
