@@ -5,23 +5,30 @@ import { Rooms } from './rooms'
 import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Game } from 'models/ViewModels';
+import { Mutation } from 'react-apollo';
+import { MUTATIONS } from '../../queries';
+import { identity } from 'common/identity';
+import { withRouter } from 'react-router';
 
-export const GameContext = React.createContext({})
+export const GameContext = React.createContext(new Game())
 
-@observer export class Lobby extends React.Component<any, any>{
+@observer class LobbyImpl extends React.Component<any, any>{
     @observable private shownGameRulesModal: boolean;
     @observable private shownCreateRoomModal: boolean;
-    @observable private roomName:string = "";
+    private roomName: any = null;
+
+    private user: any;
 
     constructor(props: any) {
         super(props);
 
         this.shownGameRulesModal = false;
         this.shownCreateRoomModal = false;
+        this.user = identity.userInfo();
 
         this.toggleGameRulesModal = this.toggleGameRulesModal.bind(this);
         this.toggleCreateRoomModal = this.toggleCreateRoomModal.bind(this);
-        this.handleRoomNameChange = this.handleRoomNameChange.bind(this);
     }
 
     public render() {
@@ -30,7 +37,7 @@ export const GameContext = React.createContext({})
             <div className="row">
                 <div className="col-md-7">
                     <h2 className="lobby-main-header">Добре дошли!</h2>
-                    <h3 className="lobby-main-header">Приятна игра на Саботьор!</h3>
+                    <h3 className="lobby-main-header">Приятна игра на <GameContext.Consumer>{gameInfo => gameInfo.translatedName}</GameContext.Consumer>!</h3>
                 </div>
                 <div className="col-md-5">
                     <div className="btn-group mr-2" role="group">
@@ -55,34 +62,43 @@ export const GameContext = React.createContext({})
 
             <Modal isOpen={this.shownGameRulesModal} toggle={this.toggleGameRulesModal}>
                 <ModalHeader toggle={this.toggleGameRulesModal} close={<button className="close" onClick={this.toggleGameRulesModal}>&times;</button>}>Правила на играта</ModalHeader>
-                <ModalBody>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et
-                    dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip
-                    ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu
-                    fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt
-                    mollit anim id est laborum.
-                    </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={this.toggleGameRulesModal}>Do Something</Button>{' '}
-                    <Button color="secondary" onClick={this.toggleGameRulesModal}>Cancel</Button>
-                </ModalFooter>
+                <ModalBody><GameContext.Consumer>{gameInfo => gameInfo.gameRules}</GameContext.Consumer></ModalBody>
             </Modal>
 
             <Modal isOpen={this.shownCreateRoomModal} toggle={this.toggleCreateRoomModal}>
                 <ModalHeader toggle={this.toggleCreateRoomModal} close={<button className="close" onClick={this.toggleCreateRoomModal}>&times;</button>}>Създай нова стая</ModalHeader>
-                <ModalBody>
-                    <div className="row">
-                        <div className="col-12">
-                        <label htmlFor="room-name">Име
-                         <input type="text" id="room-name" className="form-control" value={this.roomName} onChange={this.handleRoomNameChange} />
-                        </label>
-                        </div>
-                    </div>
-                    </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={this.toggleCreateRoomModal}>Създай</Button>{' '}
-                    <Button color="secondary" onClick={this.toggleCreateRoomModal}>Откажи</Button>
-                </ModalFooter>
+
+                <Mutation mutation={MUTATIONS.ADD_ROOM_QUERY}>
+                    {
+                        (addRoom, { data }) => {
+                            return <>
+                                <ModalBody>
+                                    <div className="row">
+                                        <div className="col-12">
+                                            <label htmlFor="room-name">Име
+                                            <input type="text" id="room-name" className="form-control" ref={(e) => this.roomName = e} />
+                                            </label>
+                                        </div>
+                                    </div>
+                                </ModalBody>
+                                <ModalFooter>
+                                    <GameContext.Consumer>
+                                        {
+                                            gameInfo => {
+                                                return <><Button color="primary" onClick={(e: any) => {
+                                                 
+                                                    addRoom({ variables: { gameId: gameInfo.id, name: this.roomName.value, ownerId: this.user.id }, }).then((room)=>{
+                                                        this.props.history.push(this.props.location.pathname+"/"+(room as any).data.addRoom.id)
+                                                    });
+                                                }}>Създай</Button>{' '}
+                                                    <Button color="secondary" onClick={this.toggleCreateRoomModal}>Откажи</Button></>
+                                            }
+                                        }
+                                    </GameContext.Consumer>
+                                </ModalFooter></>
+                        }
+                    }
+                </Mutation>
             </Modal>
         </div>
     }
@@ -91,11 +107,9 @@ export const GameContext = React.createContext({})
         this.shownGameRulesModal = !this.shownGameRulesModal;
     }
 
-    private handleRoomNameChange(e:any){
-        this.roomName = e.target.name;
-    }
-
     private toggleCreateRoomModal() {
         this.shownCreateRoomModal = !this.shownCreateRoomModal;
     }
 }
+
+export const Lobby = withRouter(LobbyImpl);

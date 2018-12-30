@@ -70,6 +70,12 @@ const MUTATIONS = {
             ownerId
             ownerName
         }
+    }`,
+    ADD_ROOM_QUERY: gql`
+    mutation($gameId: String!, $name:String!, $ownerId:String!){
+        addRoom(gameId:$gameId, name: $name, ownerId: $ownerId){
+            id
+        }
     }`
 }
 

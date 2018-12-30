@@ -26,7 +26,7 @@ import { identity } from 'common'
         return <BrowserRouter basename="/"><>
             <nav className="navbar navbar-expand-lg main-navbar main-text fixed-top">
                 <div className="container">
-                    <a className="navbar-brand" href="#">Saboteur</a>
+                    <a className="navbar-brand main-logo" href="#">YGames</a>
                     <button className="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                         <span className="navbar-toggler-icon"></span>
                     </button>
@@ -50,7 +50,7 @@ import { identity } from 'common'
                     <Route exact path="/" component={Home} />
                     <Route path="/register" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Registration handleRegister={this.handleRegisterCallback} />} />
                     <Route path="/login" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Login handleLogin={this.handleLoginCallback} />} />} />
-                    <Route path="/games/:game?/:id?" component={() => !this.isUserAuthenticated ? <Login handleLogin={this.handleLoginCallback} /> : <Games />} />
+                    <Route path="/games/:game?/:roomId?" component={() => !this.isUserAuthenticated ? <Login handleLogin={this.handleLoginCallback} /> : <Games />} />
                     <Route path="*" component={NotFound} />
                 </Switch>
             </div></>

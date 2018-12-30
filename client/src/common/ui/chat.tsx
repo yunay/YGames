@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Query, Mutation } from 'react-apollo';
 import { MUTATIONS, QUERIES, SUBSCRIPTIONS } from '../../queries';
 import './common.css';
-import { User } from '../../models/User';
+import { User } from '../../models/ViewModels';
 import { identity } from 'common'
 
 class ChatBody extends React.Component<any, any>{

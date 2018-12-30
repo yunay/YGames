@@ -5,10 +5,17 @@ import Game from './Game'
 import { Query } from 'react-apollo';
 import { QUERIES } from '../../queries';
 import { GameContext } from 'common';
+import { GameProcessing } from './GameProcessing';
 
 class GamesImpl extends React.Component<RouteComponentProps, any> {
 
     render() {
+        var roomId = (this.props.match.params as any).roomId;
+        //TODO: Да се проверява дали подаденото ID го има като стая и дали потребителят е влязал в стаята
+        if(roomId != null && roomId != undefined){
+            return <GameProcessing/>
+        }
+
         var gameName = (this.props.match.params as any).game;
         if (gameName != null && gameName != undefined) {
 
