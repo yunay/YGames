@@ -76,6 +76,12 @@ const MUTATIONS = {
         addRoom(gameId:$gameId, name: $name, ownerId: $ownerId){
             id
         }
+    }`,
+    UPDATE_ROOM_QUERY: gql`
+    mutation($id: String!, $name:String, $playersIds:[String], $isOpen:Boolean){
+        updateRoom(id:$id, name: $name, playersIds: $playersIds, isOpen:$isOpen){
+            id
+        }
     }`
 }
 

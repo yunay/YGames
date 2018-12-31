@@ -1,12 +1,15 @@
 import * as React from 'react'
-import { Query } from 'react-apollo';
-import { QUERIES, SUBSCRIPTIONS } from '../../queries';
+import { Query, Mutation } from 'react-apollo';
+import { QUERIES, SUBSCRIPTIONS, MUTATIONS } from '../../queries';
 import { GameContext } from './lobby';
+import { identity } from '../identity';
+import { withRouter } from 'react-router';
 
-export class Rooms extends React.Component<any, any>{
-
+class RoomsImpl extends React.Component<any, any>{
+    
     public render() {
         var unsubscribe: any = null;
+        var userInfo = identity.userInfo();
 
         return <GameContext.Consumer>
             {
@@ -16,15 +19,15 @@ export class Rooms extends React.Component<any, any>{
 
                             if (loading) return null;
                             if (error) return `Error!: ${error}`;
-                            
                             if (!unsubscribe) {
                                 unsubscribe = subscribeToMore({
                                     document: SUBSCRIPTIONS.ON_ROOM_ADDED,
                                     updateQuery: (prev, { subscriptionData }) => {
                                         if (!subscriptionData.data) return prev;
+                                        if (subscriptionData.data.roomAdded.ownerId == userInfo.id) return prev;
 
                                         const roomAdded = subscriptionData.data.roomAdded;
-
+                                        
                                         return {
                                             ...prev,
                                             getRoomsByGameId: [...prev.getRoomsByGameId, roomAdded]
@@ -33,24 +36,37 @@ export class Rooms extends React.Component<any, any>{
                                 });
                             }
 
-                            return <table className="table main-table">
-                                <thead>
-                                    <tr>
-                                        <th colSpan={3}>Активни стаи</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {
-                                        data && data.getRoomsByGameId.map((room: any) => {
-                                            return <tr key={room.id}>
-                                                <td>{room.name}</td>
-                                                <td>{room.playersIds.length}/{gameInfo.maxPlayers}</td>
-                                                <td>{room.isOpen ? <button type="button" className="btn btn-success btn-sm">Вход <i className="fa fa-sign-in"></i></button> : null}</td>
+                            return <Mutation mutation={MUTATIONS.UPDATE_ROOM_QUERY}>
+                                {
+                                    (updateRoom)=>{
+                                        return  <table className="table main-table">
+                                        <thead>
+                                            <tr>
+                                                <th colSpan={3}>Активни стаи</th>
                                             </tr>
-                                        })
+                                        </thead>
+                                        <tbody>
+                                            {
+                                                data && data.getRoomsByGameId.map((room: any) => {
+                                                    return <tr key={room.id}>
+                                                        <td>{room.name}</td>
+                                                        <td>{room.playersIds.length}/{gameInfo.maxPlayers}</td>
+                                                        <td>{room.isOpen ? <button type="button" className="btn btn-success btn-sm" onClick={()=>{
+                                                             updateRoom({ variables: { id: room.id, playersIds: [...room.playersIds, userInfo.id], isOpen: room.playersIds.length + 1 < gameInfo.maxPlayers } }).then((room)=>{
+                                                                this.props.history.push(this.props.location.pathname+"/"+(room as any).data.updateRoom.id)
+                                                            });
+
+                                                        }}>Вход <i className="fa fa-sign-in"></i></button> : null}</td>
+                                                    </tr>
+                                                })
+                                            }
+                                        </tbody>
+                                        
+                                    </table>
                                     }
-                                </tbody>
-                            </table>
+                                }
+                               
+                            </Mutation>
                         }
                     }
                 </Query>
@@ -58,3 +74,5 @@ export class Rooms extends React.Component<any, any>{
         </GameContext.Consumer>
     }
 }
+
+export const Rooms = withRouter(RoomsImpl);

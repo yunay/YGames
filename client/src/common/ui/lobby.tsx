@@ -85,9 +85,8 @@ export const GameContext = React.createContext(new Game())
                                     <GameContext.Consumer>
                                         {
                                             gameInfo => {
-                                                return <><Button color="primary" onClick={(e: any) => {
-                                                 
-                                                    addRoom({ variables: { gameId: gameInfo.id, name: this.roomName.value, ownerId: this.user.id }, }).then((room)=>{
+                                                return <><Button color="primary" onClick={() => {
+                                                    addRoom({ variables: { gameId: gameInfo.id, name: this.roomName.value, ownerId: this.user.id } }).then((room)=>{
                                                         this.props.history.push(this.props.location.pathname+"/"+(room as any).data.addRoom.id)
                                                     });
                                                 }}>Създай</Button>{' '}

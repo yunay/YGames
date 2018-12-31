@@ -18,7 +18,7 @@ module.exports = {
         user: () => User.find({}),
         getMessages: async () => await Message.find({}),
         getGames: async () => await Game.find({}),
-        getGameByName: async (parent, { originalName }) => await Game.findOne({originalName:originalName}),
+        getGameByName: async (parent, { originalName }) => await Game.findOne({ originalName: originalName }),
         getRoomsByGameId: async (parent, { gameId }) => await Room.find({ gameId }),
     },
     Mutation: {
@@ -40,26 +40,47 @@ module.exports = {
         login: async (parent, { name, password }, context) => tryLogin(name, password, context),
         refreshTokens: (parent, { token, refreshToken }, context) => refreshTokens(token, refreshToken, context),
         addMessage: (root, args, context) => {
-            pubsub.publish(MESSAGE_ADDED, { messageAdded: args });
 
             var msg = new Message();
-            msg.text = args.text
-            msg.ownerName = args.ownerName
-            msg.ownerId = args.ownerId
+            msg.text = args.text;
+            msg.ownerName = args.ownerName;
+            msg.ownerId = args.ownerId;
 
-            return msg.save();
+            return msg.save((err, res) => {
+                pubsub.publish(MESSAGE_ADDED, { messageAdded: res });
+            });
         },
-        addRoom: (parent, {gameId, name, ownerId}) => {
+        addRoom: (parent, args, context) => {
 
             var room = new Room();
             room.id = +new Date() + "_" + "room";
-            room.gameId = gameId;
-            room.name = name;
-            room.ownerId = ownerId;
+            room.gameId = args.gameId;
+            room.name = args.name;
+            room.ownerId = args.ownerId;
             room.isOpen = true;
-            room.playersIds = [ownerId];
-            
-            pubsub.publish(ROOM_ADDED, { roomAdded: { id:room.id, gameId:room.gameId, name:room.name, ownerId:room.ownerId, isOpen:room.isOpen, playersIds:room.playersIds } });
+            room.playersIds = [args.ownerId];
+
+            return new Promise((resolve,reject)=>{
+                room.save().then((product)=>{
+                    pubsub.publish(ROOM_ADDED, { roomAdded: product });
+                    resolve(product);
+                });
+            })
+        },
+        updateRoom: async (parent, { id, name, playersIds, isOpen }) => {
+            var room = await Room.findOne({ id });
+
+            if (room == null || room == undefined)
+                throw new Error("Room not found!")
+
+            if (name != null && name != undefined)
+                room.name = name;
+
+            if (isOpen != null && isOpen != undefined)
+                room.isOpen = isOpen;
+
+            if (playersIds != null && playersIds != undefined)
+                room.playersIds = playersIds;
 
             return room.save();
         }

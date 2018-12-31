@@ -57,6 +57,7 @@ type Mutation{
     refreshTokens(token: String!, refreshToken: String!): AuthPayload!
     addMessage(text: String, ownerName: String, ownerId: String): Message!
     addRoom(gameId:String!, name:String!, ownerId:String!): Room!
+    updateRoom(id:String!, name:String, playersIds:[String], isOpen:Boolean): Room!
 }
 
 type Subscription {
