@@ -10,11 +10,11 @@ import { Mutation } from 'react-apollo';
 import { MUTATIONS } from '../../queries';
 import { identity } from 'common/identity';
 import { withRouter } from 'react-router';
+import { GameRules } from './game-rules';
 
 export const GameContext = React.createContext(new Game())
 
 @observer class LobbyImpl extends React.Component<any, any>{
-    @observable private shownGameRulesModal: boolean;
     @observable private shownCreateRoomModal: boolean;
     private roomName: any = null;
 
@@ -23,11 +23,9 @@ export const GameContext = React.createContext(new Game())
     constructor(props: any) {
         super(props);
 
-        this.shownGameRulesModal = false;
         this.shownCreateRoomModal = false;
         this.user = identity.userInfo();
 
-        this.toggleGameRulesModal = this.toggleGameRulesModal.bind(this);
         this.toggleCreateRoomModal = this.toggleCreateRoomModal.bind(this);
     }
 
@@ -41,8 +39,7 @@ export const GameContext = React.createContext(new Game())
                 </div>
                 <div className="col-md-5">
                     <div className="btn-group mr-2" role="group">
-                        <button type="button" className="btn btn-info btn-md lobby-main-btn" onClick={this.toggleGameRulesModal}>
-                            <i className="fa fa-info-circle"></i>Правила на играта</button>
+                        <GameContext.Consumer>{gameRules => <GameRules gameRules={gameRules.gameRules}/>}</GameContext.Consumer>
                         <button type="button" className="btn btn-success btn-md lobby-main-btn" onClick={this.toggleCreateRoomModal}>
                             <i className="fa fa-play-circle-o"></i>Създай стая за игра</button>
                     </div>
@@ -59,11 +56,6 @@ export const GameContext = React.createContext(new Game())
                     <Rooms />
                 </div>
             </div>
-
-            <Modal isOpen={this.shownGameRulesModal} toggle={this.toggleGameRulesModal}>
-                <ModalHeader toggle={this.toggleGameRulesModal} close={<button className="close" onClick={this.toggleGameRulesModal}>&times;</button>}>Правила на играта</ModalHeader>
-                <ModalBody><GameContext.Consumer>{gameInfo => gameInfo.gameRules}</GameContext.Consumer></ModalBody>
-            </Modal>
 
             <Modal isOpen={this.shownCreateRoomModal} toggle={this.toggleCreateRoomModal}>
                 <ModalHeader toggle={this.toggleCreateRoomModal} close={<button className="close" onClick={this.toggleCreateRoomModal}>&times;</button>}>Създай нова стая</ModalHeader>
@@ -100,10 +92,6 @@ export const GameContext = React.createContext(new Game())
                 </Mutation>
             </Modal>
         </div>
-    }
-
-    private toggleGameRulesModal() {
-        this.shownGameRulesModal = !this.shownGameRulesModal;
     }
 
     private toggleCreateRoomModal() {

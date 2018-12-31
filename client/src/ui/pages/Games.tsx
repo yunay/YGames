@@ -11,15 +11,28 @@ class GamesImpl extends React.Component<RouteComponentProps, any> {
 
     render() {
         var roomId = (this.props.match.params as any).roomId;
+        var gameName = (this.props.match.params as any).game;
+        
         //TODO: Да се проверява дали подаденото ID го има като стая и дали потребителят е влязал в стаята
-        if(roomId != null && roomId != undefined){
-            return <GameProcessing/>
+        if (roomId != null && roomId != undefined) {
+            return <Query query={QUERIES.GET_GAME_BY_NAME} variables={{ originalName: gameName }}>
+                {
+                    ({ loading, error, data }) => {
+                        if (loading) return null;
+                        if (error) return `Error!: ${error}`;
+
+                        return data && <GameContext.Provider value={data.getGameByName}>
+                            <GameProcessing />
+                        </GameContext.Provider>
+                    }
+                }
+            </Query>
         }
 
         var gameName = (this.props.match.params as any).game;
         if (gameName != null && gameName != undefined) {
 
-            return <Query query={QUERIES.GET_GAME_BY_NAME} variables={{originalName:gameName}}>
+            return <Query query={QUERIES.GET_GAME_BY_NAME} variables={{ originalName: gameName }}>
                 {
                     ({ loading, error, data }) => {
                         if (loading) return null;
@@ -27,7 +40,7 @@ class GamesImpl extends React.Component<RouteComponentProps, any> {
 
                         return data && <GameContext.Provider value={data.getGameByName}>
                             <Game />
-                    </GameContext.Provider>
+                        </GameContext.Provider>
                     }
                 }
             </Query>
