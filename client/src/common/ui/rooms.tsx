@@ -24,7 +24,8 @@ class RoomsImpl extends React.Component<any, any>{
                                     document: SUBSCRIPTIONS.ON_ROOM_ADDED,
                                     updateQuery: (prev, { subscriptionData }) => {
                                         if (!subscriptionData.data) return prev;
-                                        if (subscriptionData.data.roomAdded.ownerId == userInfo.id) return prev;
+                                        if (subscriptionData.data.roomAdded.owner.id == userInfo.id) return prev;
+                                        if(prev.getRoomsByGameId.filter((x:any)=>x.id == subscriptionData.data.roomAdded.id).length > 0  ) return prev
 
                                         const roomAdded = subscriptionData.data.roomAdded;
                                         
@@ -50,9 +51,9 @@ class RoomsImpl extends React.Component<any, any>{
                                                 data && data.getRoomsByGameId.map((room: any) => {
                                                     return <tr key={room.id}>
                                                         <td>{room.name}</td>
-                                                        <td>{room.playersIds.length}/{gameInfo.maxPlayers}</td>
+                                                        <td>{room.players.length}/{gameInfo.maxPlayers}</td>
                                                         <td>{room.isOpen ? <button type="button" className="btn btn-success btn-sm" onClick={()=>{
-                                                             updateRoom({ variables: { id: room.id, playersIds: [...room.playersIds, userInfo.id], isOpen: room.playersIds.length + 1 < gameInfo.maxPlayers } }).then((room)=>{
+                                                             updateRoom({ variables: { id: room.id, players: [...room.players, {name:userInfo.name, id:userInfo.id} ], isOpen: room.players.length + 1 < gameInfo.maxPlayers } }).then((room)=>{
                                                                 this.props.history.push(this.props.location.pathname+"/"+(room as any).data.updateRoom.id)
                                                             });
 

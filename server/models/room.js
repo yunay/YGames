@@ -5,9 +5,9 @@ const roomSchema = new Schema({
     id:String,
     gameId: String,
     name: String,
-    ownerId: String,
+    owner: Object,
     isOpen: Boolean,
-    playersIds: [String]
+    players: [Object]
 });
 
 module.exports = mongoose.model('Room', roomSchema);

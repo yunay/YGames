@@ -1,7 +1,10 @@
 import * as React from 'react'
 import { Chat, ActiveUsers, RoomActivity, GameContext, GameRules } from 'common';
 
-export class GameProcessing extends React.Component<any, any>{
+interface GameProcessingProps{
+    roomId:string;
+}
+export class GameProcessing extends React.Component<GameProcessingProps, any>{
     render() {
         return <>
             <div className="row">
@@ -25,7 +28,7 @@ export class GameProcessing extends React.Component<any, any>{
                     <ActiveUsers />
                 </div>
                 <div className="col-4">
-                    <RoomActivity />
+                    <RoomActivity roomId={this.props.roomId} />
                 </div>
             </div>
         </>

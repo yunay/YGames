@@ -15,11 +15,27 @@ const QUERIES = {
             id
             gameId
             name
-            ownerId
+            owner{
+                name
+                id
+            }
             isOpen
-            playersIds
+            players{
+                name
+                id
+            }
         }
       }`,
+      GET_ROOM_BY_ID: gql`
+      query($id:String!){
+        getRoomById(id:$id){
+              name
+              players{
+                  name
+                  id
+              }
+          }
+        }`,
     GET_GAMES: gql`
     query{
         getGames{
@@ -72,14 +88,14 @@ const MUTATIONS = {
         }
     }`,
     ADD_ROOM_QUERY: gql`
-    mutation($gameId: String!, $name:String!, $ownerId:String!){
-        addRoom(gameId:$gameId, name: $name, ownerId: $ownerId){
+    mutation($gameId: String!, $name:String!, $owner:UserInput!){
+        addRoom(gameId:$gameId, name: $name, owner: $owner){
             id
         }
     }`,
     UPDATE_ROOM_QUERY: gql`
-    mutation($id: String!, $name:String, $playersIds:[String], $isOpen:Boolean){
-        updateRoom(id:$id, name: $name, playersIds: $playersIds, isOpen:$isOpen){
+    mutation($id: String!, $name:String, $players:[UserInput], $isOpen:Boolean){
+        updateRoom(id:$id, name: $name, players: $players, isOpen:$isOpen){
             id
         }
     }`
@@ -100,9 +116,15 @@ const SUBSCRIPTIONS = {
             id
             gameId
             name
-            ownerId
+            owner{
+                name
+                id
+            }
             isOpen
-            playersIds
+            players{
+                name
+                id
+            }
         }
       }`
 }

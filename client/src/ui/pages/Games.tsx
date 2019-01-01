@@ -22,7 +22,7 @@ class GamesImpl extends React.Component<RouteComponentProps, any> {
                         if (error) return `Error!: ${error}`;
 
                         return data && <GameContext.Provider value={data.getGameByName}>
-                            <GameProcessing />
+                            <GameProcessing  roomId={roomId} />
                         </GameContext.Provider>
                     }
                 }

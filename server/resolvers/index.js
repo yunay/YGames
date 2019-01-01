@@ -20,6 +20,7 @@ module.exports = {
         getGames: async () => await Game.find({}),
         getGameByName: async (parent, { originalName }) => await Game.findOne({ originalName: originalName }),
         getRoomsByGameId: async (parent, { gameId }) => await Room.find({ gameId }),
+        getRoomById: async (parent, { id }) => await Room.findOne({ id })
     },
     Mutation: {
         register: async (parent, { name, password }) => {
@@ -56,18 +57,18 @@ module.exports = {
             room.id = +new Date() + "_" + "room";
             room.gameId = args.gameId;
             room.name = args.name;
-            room.ownerId = args.ownerId;
+            room.owner = {id:args.owner.id, name:args.owner.name};
             room.isOpen = true;
-            room.playersIds = [args.ownerId];
+            room.players = [{id:args.owner.id, name:args.owner.name}];
 
-            return new Promise((resolve,reject)=>{
-                room.save().then((product)=>{
+            return new Promise((resolve, reject) => {
+                room.save().then((product) => {
                     pubsub.publish(ROOM_ADDED, { roomAdded: product });
                     resolve(product);
                 });
             })
         },
-        updateRoom: async (parent, { id, name, playersIds, isOpen }) => {
+        updateRoom: async (parent, { id, name, players, isOpen }) => {
             var room = await Room.findOne({ id });
 
             if (room == null || room == undefined)
@@ -79,10 +80,15 @@ module.exports = {
             if (isOpen != null && isOpen != undefined)
                 room.isOpen = isOpen;
 
-            if (playersIds != null && playersIds != undefined)
-                room.playersIds = playersIds;
+            if (players != null && players != undefined)
+                room.players = players;
 
-            return room.save();
+            return new Promise((resolve, reject) => {
+                room.save().then((product) => {
+                    pubsub.publish(ROOM_ADDED, { roomAdded: product });
+                    resolve(product);
+                });
+            })
         }
     },
     Subscription: {
