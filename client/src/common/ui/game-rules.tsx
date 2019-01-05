@@ -19,7 +19,7 @@ interface GameRulesProps{
     public render() {
 
         return <>
-            <button type="button" className="btn btn-info btn-md lobby-main-btn" onClick={this.toggleGameRulesModal}>
+            <button type="button" className="btn btn-info btn-sm lobby-main-btn" onClick={this.toggleGameRulesModal}>
                 <i className="fa fa-info-circle"></i>Правила на играта</button>
             <Modal isOpen={this.shownGameRulesModal} toggle={this.toggleGameRulesModal}>
                 <ModalHeader toggle={this.toggleGameRulesModal} close={<button className="close" onClick={this.toggleGameRulesModal}>&times;</button>}>Правила на играта</ModalHeader>

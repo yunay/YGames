@@ -64,6 +64,7 @@ type Mutation{
     addMessage(text: String, ownerName: String, ownerId: String): Message!
     addRoom(gameId:String!, name:String!, owner:UserInput!): Room!
     updateRoom(id:String!, name:String, players:[UserInput], isOpen:Boolean): Room!
+    removeRoomById(id:String!):Room
 }
 
 type Subscription {

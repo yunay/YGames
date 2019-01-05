@@ -89,7 +89,8 @@ module.exports = {
                     resolve(product);
                 });
             })
-        }
+        },
+        removeRoomById: async (parent, {id})=> await Room.findOneAndRemove({id})
     },
     Subscription: {
         messageAdded: {

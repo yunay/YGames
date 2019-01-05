@@ -78,7 +78,6 @@ export const GameContext = React.createContext(new Game())
                                         {
                                             gameInfo => {
                                                 return <><Button color="primary" onClick={() => {
-                                                    console.log(this)
                                                     addRoom({ variables: { gameId: gameInfo.id, name: this.roomName.value, owner: { id: this.user.id, name: this.user.name} } }).then((room)=>{
                                                         this.props.history.push(this.props.location.pathname+"/"+(room as any).data.addRoom.id)
                                                     });

@@ -26,10 +26,14 @@ const QUERIES = {
             }
         }
       }`,
-      GET_ROOM_BY_ID: gql`
+    GET_ROOM_BY_ID: gql`
       query($id:String!){
         getRoomById(id:$id){
               name
+              owner{
+                  id
+                  name
+              }
               players{
                   name
                   id
@@ -98,7 +102,13 @@ const MUTATIONS = {
         updateRoom(id:$id, name: $name, players: $players, isOpen:$isOpen){
             id
         }
-    }`
+    }`,
+    REMOVE_ROOM_BY_ID: gql`
+    mutation($id: String!){
+        removeRoomById(id:$id){
+            id
+        }
+    }`,
 }
 
 const SUBSCRIPTIONS = {

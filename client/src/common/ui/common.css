@@ -107,7 +107,6 @@ table.main-table thead th {
     background: #ff6a00 !Important;
     color: white !Important;
     padding: 3px 5px!Important;
-    border-radius: 5px 5px 0 0 !Important;
 }
 
 table.main-table {
@@ -131,7 +130,7 @@ table.main-table td{
 }
 
 .lobby-main-btn{
-    font-size: 18px !important;
+    font-size: 15px !important;
 }
 
 .lobby-main-btn>i{
