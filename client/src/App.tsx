@@ -35,7 +35,7 @@ const link = split(
 
 const client = new ApolloClient({
   link,
-  cache: new InMemoryCache()
+  cache: new InMemoryCache({addTypename: false})
 });
 
 export default class App extends React.Component {

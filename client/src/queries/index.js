@@ -2,11 +2,14 @@ import { gql } from 'apollo-boost';
 
 const QUERIES = {
     GET_MESSAGES: gql`
-    query{
-        getMessages{
-          text,
-          ownerId,
-          ownerName
+    query($roomId:String!){
+        getMessages(roomId:$roomId){
+          text
+          owner{
+              id
+              name
+          }
+          roomId
         }
       }`,
     GET_ROOMS_BY_GAME_ID: gql`
@@ -84,11 +87,14 @@ const MUTATIONS = {
         }
     }`,
     ADD_MESSAGE_QUERY: gql`
-    mutation($text: String, $ownerId:String, $ownerName:String){
-        addMessage(text:$text, ownerId: $ownerId, ownerName: $ownerName){
+    mutation($text: String!, $owner:UserInput!, $roomId:String!){
+        addMessage(text:$text, owner: $owner, roomId: $roomId){
             text
-            ownerId
-            ownerName
+            roomId
+            owner{
+                id
+                name
+            }
         }
     }`,
     ADD_ROOM_QUERY: gql`
@@ -115,9 +121,12 @@ const SUBSCRIPTIONS = {
     ON_ADDED_MSG: gql`
     subscription{
         messageAdded{
+          roomId
           text
-          ownerName
-          ownerId
+          owner{
+              id
+              name
+          }
         }
       }`,
     ON_ROOM_ADDED: gql`

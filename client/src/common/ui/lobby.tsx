@@ -47,7 +47,7 @@ export const GameContext = React.createContext(new Game())
             </div>
             <div className="row">
                 <div className="col-4">
-                    <Chat />
+                    <Chat roomId={"lobby"}/>
                 </div>
                 <div className="col-4">
                     <ActiveUsers />

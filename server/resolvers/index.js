@@ -16,7 +16,7 @@ const ROOM_ADDED = 'ROOM_ADDED';
 module.exports = {
     Query: {
         user: () => User.find({}),
-        getMessages: async () => await Message.find({}),
+        getMessages: async (parent, { roomId }) => await Message.find({ roomId }),
         getGames: async () => await Game.find({}),
         getGameByName: async (parent, { originalName }) => await Game.findOne({ originalName: originalName }),
         getRoomsByGameId: async (parent, { gameId }) => await Room.find({ gameId }),
@@ -40,16 +40,20 @@ module.exports = {
         },
         login: async (parent, { name, password }, context) => tryLogin(name, password, context),
         refreshTokens: (parent, { token, refreshToken }, context) => refreshTokens(token, refreshToken, context),
-        addMessage: (root, args, context) => {
+        addMessage: async (root, args, context) => {
 
             var msg = new Message();
             msg.text = args.text;
             msg.ownerName = args.ownerName;
-            msg.ownerId = args.ownerId;
-
-            return msg.save((err, res) => {
-                pubsub.publish(MESSAGE_ADDED, { messageAdded: res });
-            });
+            msg.owner = args.owner;
+            msg.roomId = args.roomId;
+            
+            return new Promise((resolve, reject) => {
+                msg.save().then((product) => {
+                    pubsub.publish(MESSAGE_ADDED, { messageAdded: product });
+                    resolve(product);
+                });
+            })
         },
         addRoom: (parent, args, context) => {
 
@@ -57,9 +61,9 @@ module.exports = {
             room.id = +new Date() + "_" + "room";
             room.gameId = args.gameId;
             room.name = args.name;
-            room.owner = {id:args.owner.id, name:args.owner.name};
+            room.owner = { id: args.owner.id, name: args.owner.name };
             room.isOpen = true;
-            room.players = [{id:args.owner.id, name:args.owner.name}];
+            room.players = [{ id: args.owner.id, name: args.owner.name }];
 
             return new Promise((resolve, reject) => {
                 room.save().then((product) => {
@@ -85,12 +89,17 @@ module.exports = {
 
             return new Promise((resolve, reject) => {
                 room.save().then((product) => {
+
                     pubsub.publish(ROOM_ADDED, { roomAdded: product });
                     resolve(product);
                 });
             })
         },
-        removeRoomById: async (parent, {id})=> await Room.findOneAndRemove({id})
+        removeRoomById: async (parent, { id }) => {
+            await Room.findOneAndDelete({ id })
+            await Message.deleteMany({roomId:id})
+
+        } 
     },
     Subscription: {
         messageAdded: {

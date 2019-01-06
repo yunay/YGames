@@ -28,8 +28,7 @@ class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
                         <div className="col-md-6">
                             <div className="btn-group mr-2" role="group">
                                 <GameRules gameRules={gameInfo.gameRules} />
-                                <button type="button" className="btn btn-success btn-sm lobby-main-btn">
-                                    <i className="fa fa-play-circle-o"></i>Стартирай играта</button>
+
                                 <Query query={QUERIES.GET_ROOM_BY_ID} variables={{ id: this.props.roomId }}>
                                     {
                                         ({ loading, error, data }) => {
@@ -38,19 +37,24 @@ class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
                                             if (error) return `Error!: ${error}`;
 
                                             return data && data.getRoomById && data.getRoomById.owner.id == this.user.id
-                                                ? <Mutation mutation={MUTATIONS.REMOVE_ROOM_BY_ID}>
-                                                    {
-                                                        (removeRoomById) => {
+                                                ? <>
+                                                    <button type="button" className="btn btn-success btn-sm lobby-main-btn"><i className="fa fa-play-circle-o"></i>Стартирай играта</button>
+                                                    <Mutation mutation={MUTATIONS.REMOVE_ROOM_BY_ID}>
+                                                        {
+                                                            (removeRoomById) => {
 
-                                                            return <button type="button" onClick={() => {
+                                                                return <>
 
-                                                                removeRoomById({variables:{id:this.props.roomId}}).then(()=>{
-                                                                    this.props.history.push(`/games/${gameInfo.originalName}`)
-                                                                })
-                                                            }} className="btn btn-danger btn-sm lobby-main-btn"><i className="fa fa-play-circle-o"></i>Изтрий стаята</button>
+                                                                    <button type="button" onClick={() => {
+
+                                                                        removeRoomById({ variables: { id: this.props.roomId } }).then(() => {
+                                                                            this.props.history.push(`/games/${gameInfo.originalName}`)
+                                                                        })
+                                                                    }} className="btn btn-danger btn-sm lobby-main-btn"><i className="fa fa-play-circle-o"></i>Изтрий стаята</button>
+                                                                </>
+                                                            }
                                                         }
-                                                    }
-                                                </Mutation>
+                                                    </Mutation></>
                                                 : null
                                         }
                                     }
@@ -60,7 +64,7 @@ class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
                     </div>
                         <div className="row">
                             <div className="col-4">
-                                <Chat />
+                                <Chat roomId={this.props.roomId} />
                             </div>
                             <div className="col-4">
                                 <ActiveUsers />
@@ -72,10 +76,6 @@ class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
 
                     </>
                 }
-
-
-
-
             </GameContext.Consumer>
         </>
     }

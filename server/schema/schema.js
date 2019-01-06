@@ -39,8 +39,8 @@ type Game{
 
 type Message{
     text:String!
-    ownerName:String!
-    ownerId:String!
+    owner:User!
+    roomId:String!
 }
 
 type AuthPayload {
@@ -52,7 +52,7 @@ type Query{
     user (id: ID!): User
     getGames: [Game!]!
     getGameByName(originalName:String!):Game!
-    getMessages: [Message!]!
+    getMessages(roomId:String!): [Message!]!
     getRoomById(id:String!):Room!
     getRoomsByGameId(gameId:String!):[Room!]!
 }
@@ -61,7 +61,7 @@ type Mutation{
     register(name: String!, password: String!): User!
     login(name:String!, password:String!):AuthPayload!
     refreshTokens(token: String!, refreshToken: String!): AuthPayload!
-    addMessage(text: String, ownerName: String, ownerId: String): Message!
+    addMessage(text: String!, owner: UserInput!, roomId:String!): Message!
     addRoom(gameId:String!, name:String!, owner:UserInput!): Room!
     updateRoom(id:String!, name:String, players:[UserInput], isOpen:Boolean): Room!
     removeRoomById(id:String!):Room

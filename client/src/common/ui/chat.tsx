@@ -5,10 +5,14 @@ import './common.css';
 import { User } from '../../models/ViewModels';
 import { identity } from 'common'
 
-class ChatBody extends React.Component<any, any>{
+interface ChatProps{
+    roomId?:string;
+}
+
+class ChatBody extends React.Component<ChatProps, any>{
     private user: User;
 
-    constructor(props:any){
+    constructor(props:ChatProps){
         super(props);
 
         this.user = identity.userInfo();
@@ -17,7 +21,7 @@ class ChatBody extends React.Component<any, any>{
     render(){
         var unsubscribe: any = null;
 
-        return  <Query query={QUERIES.GET_MESSAGES}>
+        return  <Query query={QUERIES.GET_MESSAGES} variables={{roomId:this.props.roomId}}>
 
         {({ loading, error, data, subscribeToMore }) => {
 
@@ -31,7 +35,7 @@ class ChatBody extends React.Component<any, any>{
                         if (!subscriptionData.data) return prev;
 
                         const messageAdded = subscriptionData.data.messageAdded;
-                  
+
                         return {
                             ...prev,
                             getMessages: [...prev.getMessages, messageAdded]
@@ -41,7 +45,7 @@ class ChatBody extends React.Component<any, any>{
             }
 
             return data && data.getMessages.map((message: any, id: number) => {
-                if(message.ownerId === this.user._id)
+                if(message.owner.id === this.user.id)
                     return <div key={id} className="chat-message chat-msg-sent"><span>{message.text}</span></div>
 
                 return <div key={id} className="chat-message chat-msg-received"><span>{message.text}</span></div>
@@ -51,7 +55,7 @@ class ChatBody extends React.Component<any, any>{
     }
 }
 
-class ChatInput extends React.Component<any, any>{
+class ChatInput extends React.Component<ChatProps, any>{
     private message:any = null;
     private user: User;
 
@@ -69,7 +73,7 @@ class ChatInput extends React.Component<any, any>{
                             <input type="text" className="form-control chat-input" ref={(e) => this.message = e} placeholder="..." />
                             <div className="input-group-append">
                                 <button onClick={(e:any) => {
-                                    addMessage({ variables: { text: this.message.value, ownerName: this.user.name, ownerId: this.user._id } });
+                                    addMessage({ variables: { text: this.message.value, owner: {id:this.user.id, name: this.user.name}, roomId: this.props.roomId } });
                                     this.message.value = "";
                                 }} className="btn main-color main-text" type="button">Изпрати</button>
                             </div>
@@ -81,16 +85,16 @@ class ChatInput extends React.Component<any, any>{
     }
 }
 
-export class Chat extends React.Component<any, any>{
+export class Chat extends React.Component<ChatProps, any>{
 
     public render() {
 
         return <div className="chat box">
             <div className="chat-head head-text">💬</div>
             <div className="chat-body">
-                <ChatBody />
+                <ChatBody roomId={this.props.roomId} />
             </div>
-            <ChatInput />
+            <ChatInput roomId={this.props.roomId} />
         </div>
     }
 }

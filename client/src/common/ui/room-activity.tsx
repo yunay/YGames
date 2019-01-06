@@ -36,7 +36,11 @@ export class RoomActivity extends React.Component<RoomActivityProps, any>{
                                 data.getRoomById.players.map((player: any) => {
                                     return <tr key={player.id}>
                                         <td>{player.name}</td>
-                                        <td>{player.id == this.user.id ? <span>Домакин</span> : <button type="button" className="btn btn-danger btn-sm">Изгони <i className="fa fa-user-times"></i></button>}</td>
+                                        <td>{player.id == this.user.id 
+                                            ? <span>Домакин</span> 
+                                            : data.getRoomById.owner.id == this.user.id 
+                                                ? <button type="button" className="btn btn-danger btn-sm">Изгони <i className="fa fa-user-times"></i></button>
+                                                : null}</td>
                                     </tr>
                                 })
                             }
