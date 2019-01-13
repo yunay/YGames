@@ -2,17 +2,33 @@ import * as React from 'react'
 import saboteur from '../../images/saboteur.jpg'
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import Game from './Game'
-import { Query } from 'react-apollo';
-import { QUERIES } from '../../queries';
-import { GameContext } from 'common';
+import { Query, Mutation, graphql } from 'react-apollo';
+import { QUERIES, MUTATIONS } from '../../queries';
+import { GameContext, identity } from 'common';
 import { GameProcessing } from './GameProcessing';
 
-class GamesImpl extends React.Component<RouteComponentProps, any> {
+interface GamesProps extends RouteComponentProps{
+
+}
+
+class GamesImpl extends React.Component<GamesProps, any> {
+    private user: any;
+
+    constructor(props:GamesProps){
+        super(props)
+
+        this.user = identity.userInfo();
+    }
 
     render() {
         var roomId = (this.props.match.params as any).roomId;
         var gameName = (this.props.match.params as any).game;
-        
+
+        if (gameName)
+           (this.props as any).changeUserStatus({variables:{userId: this.user.id, status:true}});
+        else
+            (this.props as any).changeUserStatus({variables:{userId: this.user.id, status:false}});
+
         //TODO: Да се проверява дали подаденото ID го има като стая и дали потребителят е влязал в стаята
         if (roomId != null && roomId != undefined) {
             return <Query query={QUERIES.GET_GAME_BY_NAME} variables={{ originalName: gameName }}>
@@ -22,7 +38,7 @@ class GamesImpl extends React.Component<RouteComponentProps, any> {
                         if (error) return `Error!: ${error}`;
 
                         return data && <GameContext.Provider value={data.getGameByName}>
-                            <GameProcessing  roomId={roomId} />
+                            <GameProcessing roomId={roomId} />
                         </GameContext.Provider>
                     }
                 }
@@ -76,5 +92,4 @@ class GamesImpl extends React.Component<RouteComponentProps, any> {
     }
 }
 
-const Games = withRouter(GamesImpl);
-export default Games;
+export const Games = withRouter(graphql<GamesProps>(MUTATIONS.CHANGE_USER_ONLINE_STATUS, {name: "changeUserStatus"})(GamesImpl));

@@ -12,6 +12,7 @@ const serverConfig = require('../server.config');
 const pubsub = new PubSub();
 const MESSAGE_ADDED = 'MESSAGE_ADDED';
 const ROOM_ADDED = 'ROOM_ADDED';
+const USER_ACTIVITY_CHANGE = 'USER_ACTIVITY_CHANGE';
 
 module.exports = {
     Query: {
@@ -20,7 +21,8 @@ module.exports = {
         getGames: async () => await Game.find({}),
         getGameByName: async (parent, { originalName }) => await Game.findOne({ originalName: originalName }),
         getRoomsByGameId: async (parent, { gameId }) => await Room.find({ gameId }),
-        getRoomById: async (parent, { id }) => await Room.findOne({ id })
+        getRoomById: async (parent, { id }) => await Room.findOne({ id }),
+        getOnlineUsers: async () => await User.find({ isOnline: true })
     },
     Mutation: {
         register: async (parent, { name, password }) => {
@@ -34,11 +36,25 @@ module.exports = {
             currentUser.name = name;
             currentUser.gameLobby = "";
             currentUser.isPlaying = false;
+            currentUser.isOnline = false;
             currentUser.password = await bcrypt.hash(password, 12);
 
             return currentUser.save();
         },
         login: async (parent, { name, password }, context) => tryLogin(name, password, context),
+        changeUserOnlineStatus: async (parent, { userId, status }) => {
+            let user = await User.findOne({ id:userId });
+            let userStatus = status ? true : false;
+            user.isOnline = status;
+
+            return new Promise((resolve, reject) => {
+                user.save().then(async (product) => {
+                    let onlineUsers = await User.find({isOnline:true});
+                    pubsub.publish(USER_ACTIVITY_CHANGE, { userActivityChange: onlineUsers });
+                    resolve(onlineUsers);
+                });
+            })
+        },
         refreshTokens: (parent, { token, refreshToken }, context) => refreshTokens(token, refreshToken, context),
         addMessage: async (root, args, context) => {
 
@@ -47,7 +63,7 @@ module.exports = {
             msg.ownerName = args.ownerName;
             msg.owner = args.owner;
             msg.roomId = args.roomId;
-            
+
             return new Promise((resolve, reject) => {
                 msg.save().then((product) => {
                     pubsub.publish(MESSAGE_ADDED, { messageAdded: product });
@@ -97,9 +113,8 @@ module.exports = {
         },
         removeRoomById: async (parent, { id }) => {
             await Room.findOneAndDelete({ id })
-            await Message.deleteMany({roomId:id})
-
-        } 
+            await Message.deleteMany({ roomId: id })
+        }
     },
     Subscription: {
         messageAdded: {
@@ -108,5 +123,8 @@ module.exports = {
         roomAdded: {
             subscribe: async () => await pubsub.asyncIterator([ROOM_ADDED])
         },
+        userActivityChange: {
+            subscribe: async () => await pubsub.asyncIterator([USER_ACTIVITY_CHANGE])
+        }
     }
 };

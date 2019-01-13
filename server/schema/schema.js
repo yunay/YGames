@@ -13,6 +13,7 @@ type User{
     password:String!
     gameLobby: String!
     isPlaying: Boolean!
+    isOnline: Boolean!
 }
 
 type Room{
@@ -50,6 +51,7 @@ type AuthPayload {
 
 type Query{
     user (id: ID!): User
+    getOnlineUsers:[User!]!
     getGames: [Game!]!
     getGameByName(originalName:String!):Game!
     getMessages(roomId:String!): [Message!]!
@@ -60,6 +62,7 @@ type Query{
 type Mutation{
     register(name: String!, password: String!): User!
     login(name:String!, password:String!):AuthPayload!
+    changeUserOnlineStatus(userId:String!, status:Boolean!):[User!]!
     refreshTokens(token: String!, refreshToken: String!): AuthPayload!
     addMessage(text: String!, owner: UserInput!, roomId:String!): Message!
     addRoom(gameId:String!, name:String!, owner:UserInput!): Room!
@@ -70,6 +73,7 @@ type Mutation{
 type Subscription {
     messageAdded: Message!
     roomAdded:Room!
+    userActivityChange:[User!]!
 }
 `
 

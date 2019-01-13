@@ -68,6 +68,15 @@ const QUERIES = {
               gameRules
               isActive
         }
+    }`,
+    GET_ONLINE_USERS: gql`
+    query{
+        getOnlineUsers{
+              id
+              name
+              isOnline
+              isPlaying
+        }
     }`
 }
 
@@ -115,6 +124,12 @@ const MUTATIONS = {
             id
         }
     }`,
+    CHANGE_USER_ONLINE_STATUS: gql`
+    mutation($userId: String!, $status:Boolean!){
+        changeUserOnlineStatus(userId:$userId,status:$status){
+            id
+        }
+    }`,
 }
 
 const SUBSCRIPTIONS = {
@@ -145,7 +160,16 @@ const SUBSCRIPTIONS = {
                 id
             }
         }
-      }`
+      }`,
+      ON_USER_ACTIVITY_CHANGE: gql`
+      subscription{
+        userActivityChange{
+            id  
+            name
+            isOnline
+            isPlaying
+          }
+        }`
 }
 
 export { MUTATIONS, SUBSCRIPTIONS, QUERIES };

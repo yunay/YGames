@@ -6,7 +6,8 @@ const userSchema = new Schema({
     name: String,
     password: String,
     gameLobby: String,
-    isPlaying: Boolean
+    isPlaying: Boolean,
+    isOnline: Boolean,
 });
 
 module.exports = mongoose.model('User', userSchema);

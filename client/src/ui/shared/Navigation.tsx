@@ -2,7 +2,7 @@ import * as React from 'react';
 import { BrowserRouter, Link, Redirect } from 'react-router-dom'
 import { Switch, Route } from 'react-router'
 import Home from '../pages/Home'
-import Games from '../pages/Games'
+import { Games } from '../pages/Games'
 import Login from '../pages/Login'
 import Registration from '../pages/Registration'
 import NotFound from '../pages/NotFound'
