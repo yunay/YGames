@@ -61,7 +61,7 @@ import { identity } from 'common'
         return <ul className="navbar-nav ml-auto">
             {
                 this.isUserAuthenticated
-                    ? <><li className="nav-item"><a className="nav-link">ЗДРАВЕЙ, {identity.userInfo().name}</a></li>
+                    ? <><li className="nav-item"><a className="nav-link"><span>{identity.userInfo().avatar}</span>{identity.userInfo().name}</a></li>
                         <li className="nav-item"><a className="nav-link" onClick={this.handleLogout}>ИЗХОД</a></li>
                     </>
                     : <>

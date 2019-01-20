@@ -12,6 +12,7 @@ type User{
     name:String!
     password:String!
     gameLobby: String!
+    avatar: String!
     isPlaying: Boolean!
     isOnline: Boolean!
 }
@@ -60,7 +61,7 @@ type Query{
 }
 
 type Mutation{
-    register(name: String!, password: String!): User!
+    register(name: String!, password: String!, avatar: String!): User!
     login(name:String!, password:String!):AuthPayload!
     changeUserOnlineStatus(userId:String!, status:Boolean!):[User!]!
     refreshTokens(token: String!, refreshToken: String!): AuthPayload!

@@ -5,7 +5,7 @@ import Game from './Game'
 import { Query, Mutation, graphql } from 'react-apollo';
 import { QUERIES, MUTATIONS } from '../../queries';
 import { GameContext, identity } from 'common';
-import { GameProcessing } from './GameProcessing';
+import  GameProcessing from './GameProcessing';
 
 interface GamesProps extends RouteComponentProps{
 

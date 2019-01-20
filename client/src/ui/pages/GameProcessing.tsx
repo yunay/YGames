@@ -1,8 +1,8 @@
 import * as React from 'react'
 import { Chat, ActiveUsers, RoomActivity, GameContext, GameRules, identity } from 'common';
-import { Query, Mutation } from 'react-apollo';
+import { Query, Mutation, graphql } from 'react-apollo';
 import { QUERIES, MUTATIONS } from '../../queries';
-import { withRouter, RouteComponentProps } from 'react-router';
+import { withRouter, RouteComponentProps, Prompt } from 'react-router';
 
 interface GameProcessingProps extends RouteComponentProps {
     roomId?: string;
@@ -10,11 +10,17 @@ interface GameProcessingProps extends RouteComponentProps {
 
 class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
     private user: any = null;
+    private ownerId:string = "";
 
     constructor(props: GameProcessingProps) {
         super(props)
 
         this.user = identity.userInfo();
+    }
+
+    componentWillUnmount(){
+        if(this.user.id == this.ownerId)
+            (this.props as any).removeRoomById({variables:{ id: this.props.roomId }});
     }
 
     render() {
@@ -35,6 +41,8 @@ class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
 
                                             if (loading) return null;
                                             if (error) return `Error!: ${error}`;
+                                            if(data && data.getRoomById)
+                                                this.ownerId = data.getRoomById.owner.id;
 
                                             return data && data.getRoomById && data.getRoomById.owner.id == this.user.id
                                                 ? <>
@@ -81,4 +89,4 @@ class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
     }
 }
 
-export const GameProcessing = withRouter(GameProcessingImpl);
+export default withRouter(graphql<GameProcessingProps>(MUTATIONS.REMOVE_ROOM_BY_ID, { name: "removeRoomById" })(GameProcessingImpl));

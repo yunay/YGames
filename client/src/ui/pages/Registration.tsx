@@ -3,6 +3,7 @@ import { observer } from 'mobx-react';
 import { observable } from 'mobx';
 import { graphql, compose } from 'react-apollo';
 import { MUTATIONS } from '../../queries'
+const clientConfig = require('../../client.config')
 
 interface RegistrationProps {
     handleRegister?: () => void;
@@ -13,7 +14,7 @@ interface RegistrationProps {
     @observable private name: string = "";
     @observable private password: string = "";
     @observable private repassword: string = "";
-
+    @observable private selectedAvatar:any = null;
 
     constructor(props: any) {
         super(props)
@@ -22,6 +23,7 @@ interface RegistrationProps {
         this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleRePasswordChange = this.handleRePasswordChange.bind(this);
         this.handleRegister = this.handleRegister.bind(this);
+        this.selectedAvatar = clientConfig.avatars[0];
     }
 
     public render() {
@@ -49,40 +51,13 @@ interface RegistrationProps {
             </div>
             <div className="col-sm-12 col-md-8 avatars-panel">
                 <div className="row">
-                    <div className="col-2"><span className="avatar-panel">😎</span><span className="fa fa-check selected-avatar"></span></div>
-                    <div className="col-2"><span className="avatar-panel">🤩</span></div>
-                    <div className="col-2"><span className="avatar-panel">😜</span></div>
-                    <div className="col-2"><span className="avatar-panel">🤠</span></div>
-                    <div className="col-2"><span className="avatar-panel">👻</span></div>
-                    <div className="col-2"><span className="avatar-panel">👧</span><span className="fa fa-check selected-avatar"></span></div>
-                </div>
-                <div className="row">
-                    <div className="col-2"><span className="avatar-panel">🧒</span></div>
-                    <div className="col-2"><span className="avatar-panel">👸</span></div>
-                    <div className="col-2"><span className="avatar-panel">👩</span></div>
-                    <div className="col-2"><span className="avatar-panel">🤴</span></div>
-                    <div className="col-2"><span className="avatar-panel">👱‍</span></div>
-                    <div className="col-2"><span className="avatar-panel">👦</span></div>
-                </div>
-                <div className="row">
-                    <div className="col-2"><span className="avatar-panel">🐹</span></div>
-                    <div className="col-2"><span className="avatar-panel">🐺</span></div>
-                    <div className="col-2"><span className="avatar-panel">🦉</span></div>
-                    <div className="col-2"><span className="avatar-panel">🐵</span></div>
-                    <div className="col-2"><span className="avatar-panel">🐸</span></div>
-                    <div className="col-2"><span className="avatar-panel">🦁</span></div>
-                </div>
-                <div className="row">
-                    <div className="col-2"><span className="avatar-panel">🐯</span></div>
-                    <div className="col-2"><span className="avatar-panel">🦊</span></div>
-                    <div className="col-2"><span className="avatar-panel">🐰</span></div>
-                    <div className="col-2"><span className="avatar-panel">🐭</span></div>
-                    <div className="col-2"><span className="avatar-panel">🐱</span></div>
-                    <div className="col-2"><span className="avatar-panel">🐶</span></div>
+                   {this.renderAvatars()}
                 </div>
             </div>
         </div>
     }
+
+    //#region Handlers
 
     handleNameChange(e: any) {
         this.name = e.target.value;
@@ -99,7 +74,7 @@ interface RegistrationProps {
     private async handleRegister() {
 
         await (this.props as any).register({
-            variables: { name: this.name, password: this.password },
+            variables: { name: this.name, password: this.password, avatar:this.selectedAvatar },
         });
 
         const loginResponse = await (this.props as any).login({
@@ -110,6 +85,15 @@ interface RegistrationProps {
         localStorage.setItem('token', token);
         localStorage.setItem('refreshToken', refreshToken);
         this.props.handleRegister();
+    } 
+
+    //#endregion
+
+    renderAvatars():any{
+        return clientConfig.avatars.map((avatar:any, id:number) => <div onClick={()=>{this.selectedAvatar = avatar}} className="col-2" key={"avatar_"+id}>
+        <span className="avatar-panel">{avatar}</span>
+        {this.selectedAvatar == avatar ? <span className="fa fa-check selected-avatar"></span> : null}
+        </div>)
     }
 }
 

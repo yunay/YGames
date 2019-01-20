@@ -75,6 +75,7 @@ const QUERIES = {
               id
               name
               isOnline
+              avatar
               isPlaying
         }
     }`
@@ -89,8 +90,8 @@ const MUTATIONS = {
         }
     }`,
     REGISTER_QUERY: gql`
-    mutation($name: String!, $password:String!){
-        register(name:$name, password: $password){
+    mutation($name: String!, $password:String!, $avatar:String!){
+        register(name:$name, password: $password, avatar: $avatar){
             name
             password
         }
@@ -167,6 +168,7 @@ const SUBSCRIPTIONS = {
             id  
             name
             isOnline
+            avatar
             isPlaying
           }
         }`

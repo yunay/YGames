@@ -1,6 +1,7 @@
 export class User{
     id:string;
     name:string;
+    avatar:String;
     isPlaying:boolean;
 }
 

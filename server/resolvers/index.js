@@ -25,7 +25,7 @@ module.exports = {
         getOnlineUsers: async () => await User.find({ isOnline: true })
     },
     Mutation: {
-        register: async (parent, { name, password }) => {
+        register: async (parent, { name, password, avatar }) => {
             var user = await User.findOne({ name });
 
             if (user)
@@ -35,6 +35,7 @@ module.exports = {
             currentUser.id = +new Date + "_" + "user"
             currentUser.name = name;
             currentUser.gameLobby = "";
+            currentUser.avatar = avatar;
             currentUser.isPlaying = false;
             currentUser.isOnline = false;
             currentUser.password = await bcrypt.hash(password, 12);
