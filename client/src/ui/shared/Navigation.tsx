@@ -50,7 +50,7 @@ import { identity } from 'common'
                     <Route exact path="/" component={Home} />
                     <Route path="/register" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Registration handleRegister={this.handleRegisterCallback} />} />
                     <Route path="/login" component={() => this.isUserAuthenticated ? <Redirect to='/' /> : <Login handleLogin={this.handleLoginCallback} />} />} />
-                    <Route path="/games/:game?/:roomId?" component={() => !this.isUserAuthenticated ? <Login handleLogin={this.handleLoginCallback} /> : <Games />} />
+                    <Route path="/games/:game?/:roomId?/:processId?" component={() => !this.isUserAuthenticated ? <Login handleLogin={this.handleLoginCallback} /> : <Games />} />
                     <Route path="*" component={NotFound} />
                 </Switch>
             </div></>

@@ -26,6 +26,15 @@ type Room{
     players: [User!]!
 }
 
+type Process{
+    id:String!
+    processStatus: Int!
+    owner: User!
+    roomId:String!
+    players: [User!]!
+    processContent:String!
+}
+
 type Game{
     id:String!
     originalName: String!
@@ -69,6 +78,8 @@ type Mutation{
     addRoom(gameId:String!, name:String!, owner:UserInput!): Room!
     updateRoom(id:String!, name:String, players:[UserInput], isOpen:Boolean): Room!
     removeRoomById(id:String!):Room
+    addProcess(owner: UserInput!, roomId:String!):Process!
+    removeProcessById(id:String!):Process!
 }
 
 type Subscription {

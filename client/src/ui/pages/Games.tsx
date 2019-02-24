@@ -2,10 +2,11 @@ import * as React from 'react'
 import saboteur from '../../images/saboteur.jpg'
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 import Game from './Game'
-import { Query, Mutation, graphql } from 'react-apollo';
+import { Query, graphql } from 'react-apollo';
 import { QUERIES, MUTATIONS } from '../../queries';
 import { GameContext, identity } from 'common';
 import  GameProcessing from './GameProcessing';
+import { Boot } from 'saboteur-game'
 
 interface GamesProps extends RouteComponentProps{
 
@@ -22,6 +23,7 @@ class GamesImpl extends React.Component<GamesProps, any> {
 
     render() {
         var roomId = (this.props.match.params as any).roomId;
+        var processId = (this.props.match.params as any).processId;
         var gameName = (this.props.match.params as any).game;
 
         if (gameName)
@@ -36,6 +38,12 @@ class GamesImpl extends React.Component<GamesProps, any> {
                     ({ loading, error, data }) => {
                         if (loading) return null;
                         if (error) return `Error!: ${error}`;
+
+                        if(processId != null && processId != undefined){
+                            return data && <GameContext.Provider value={data.getGameByName}>
+                            <Boot />
+                        </GameContext.Provider>
+                        }
 
                         return data && <GameContext.Provider value={data.getGameByName}>
                             <GameProcessing roomId={roomId} />

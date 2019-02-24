@@ -113,6 +113,12 @@ const MUTATIONS = {
             id
         }
     }`,
+    ADD_PROCESS: gql`
+    mutation($roomId: String!, $owner:UserInput!){
+        addProcess(roomId:$roomId, owner: $owner){
+            id
+        }
+    }`,
     UPDATE_ROOM_QUERY: gql`
     mutation($id: String!, $name:String, $players:[UserInput], $isOpen:Boolean){
         updateRoom(id:$id, name: $name, players: $players, isOpen:$isOpen){
@@ -122,6 +128,12 @@ const MUTATIONS = {
     REMOVE_ROOM_BY_ID: gql`
     mutation($id: String!){
         removeRoomById(id:$id){
+            id
+        }
+    }`,
+    REMOVE_PROCESS_BY_ID: gql`
+    mutation($id: String!){
+        removeProcessById(id:$id){
             id
         }
     }`,

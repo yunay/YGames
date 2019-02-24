@@ -5,6 +5,7 @@ const User = require('../models/user');
 const Message = require('../models/message');
 const Game = require('../models/game');
 const Room = require('../models/room');
+const Process = require('../models/process');
 const { PubSub } = require('apollo-server');
 const { refreshTokens, tryLogin } = require('../auth');
 const serverConfig = require('../server.config');
@@ -89,6 +90,18 @@ module.exports = {
                 });
             })
         },
+        addProcess:(parent, args, context) =>{
+            var process = new Process();
+
+            process.id = +new Date() + "_" + "process";
+            process.processStatus = 1;
+            process.owner = { id: args.owner.id, name: args.owner.name };
+            process.roomId = args.roomId;
+            process.players = [{ id: args.owner.id, name: args.owner.name }];
+            process.processContent = ""
+
+            return process.save();
+        },
         updateRoom: async (parent, { id, name, players, isOpen }) => {
             var room = await Room.findOne({ id });
 
@@ -115,6 +128,9 @@ module.exports = {
         removeRoomById: async (parent, { id }) => {
             await Room.findOneAndDelete({ id })
             await Message.deleteMany({ roomId: id })
+        },
+        removeProcessById: async (parent, { id }) => {
+            await Process.findOneAndDelete({ id })
         }
     },
     Subscription: {

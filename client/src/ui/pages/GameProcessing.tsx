@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Chat, ActiveUsers, RoomActivity, GameContext, GameRules, identity } from 'common';
 import { Query, Mutation, graphql } from 'react-apollo';
 import { QUERIES, MUTATIONS } from '../../queries';
-import { withRouter, RouteComponentProps, Prompt } from 'react-router';
+import { withRouter, RouteComponentProps } from 'react-router';
 
 interface GameProcessingProps extends RouteComponentProps {
     roomId?: string;
@@ -10,7 +10,7 @@ interface GameProcessingProps extends RouteComponentProps {
 
 class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
     private user: any = null;
-    private ownerId:string = "";
+    private ownerId: string = "";
 
     constructor(props: GameProcessingProps) {
         super(props)
@@ -18,9 +18,9 @@ class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
         this.user = identity.userInfo();
     }
 
-    componentWillUnmount(){
-        if(this.user.id == this.ownerId)
-            (this.props as any).removeRoomById({variables:{ id: this.props.roomId }});
+    componentWillUnmount() {
+        if (this.user.id == this.ownerId)
+            (this.props as any).removeRoomById({ variables: { id: this.props.roomId } });
     }
 
     render() {
@@ -41,12 +41,24 @@ class GameProcessingImpl extends React.Component<GameProcessingProps, any>{
 
                                             if (loading) return null;
                                             if (error) return `Error!: ${error}`;
-                                            if(data && data.getRoomById)
+                                            if (data && data.getRoomById)
                                                 this.ownerId = data.getRoomById.owner.id;
 
                                             return data && data.getRoomById && data.getRoomById.owner.id == this.user.id
                                                 ? <>
-                                                    <button type="button" className="btn btn-success btn-sm lobby-main-btn"><i className="fa fa-play-circle-o"></i>Стартирай играта</button>
+                                                    <Mutation mutation={MUTATIONS.ADD_PROCESS}>
+                                                        {
+                                                            (addProcess) => {
+                                                                return <button type="button" className="btn btn-success btn-sm lobby-main-btn" onClick={() => {
+                                                                    addProcess({ variables: { roomId: this.props.roomId, owner: { id: this.user.id, name: this.user.name } } }).then((process) => {
+                                                                        this.props.history.push(this.props.location.pathname + "/" + (process as any).data.addProcess.id)
+                                                                    });
+                                                                }}>
+                                                                    <i className="fa fa-play-circle-o"></i>Стартирай играта
+                                                    </button>
+                                                            }
+                                                        }
+                                                    </Mutation>
                                                     <Mutation mutation={MUTATIONS.REMOVE_ROOM_BY_ID}>
                                                         {
                                                             (removeRoomById) => {
