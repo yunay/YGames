@@ -46,6 +46,7 @@ type Game{
     isActive: Boolean!
     playingTime: String!
     adultControl: String!
+    imageURL:String!
 }
 
 type Message{

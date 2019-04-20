@@ -16,6 +16,7 @@ const addGames = () => {
             game.isActive = serverConfig.games[i].isActive;
             game.playingTime = serverConfig.games[i].playingTime;
             game.adultControl = serverConfig.games[i].adultControl;
+            game.imageURL = serverConfig.games[i].imageURL;
   
             game.save();
         }
@@ -23,7 +24,7 @@ const addGames = () => {
 };
 
 const run = () => {
-    //addGames();
+    addGames();
 };
 
 module.exports = {

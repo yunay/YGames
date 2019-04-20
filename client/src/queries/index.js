@@ -54,6 +54,7 @@ const QUERIES = {
             maxPlayers
             gameRules
             isActive
+            imageURL
           }
       }`,
     GET_GAME_BY_NAME: gql`

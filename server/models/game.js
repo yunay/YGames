@@ -11,7 +11,8 @@ const gameSchema = new Schema({
     gameRules: String,
     isActive: Boolean,
     playingTime: String,
-    adultControl: String
+    adultControl: String,
+    imageURL: String,
 });
 
 module.exports = mongoose.model('Game', gameSchema);
